@@ -5,8 +5,6 @@ import { log } from '@grundstein/commons'
 import initApi from './api.mjs'
 import handler from './handler.mjs'
 
-import gps from '@grundstein/gps'
-
 export const run = async (config = {}) => {
   const startTime = log.hrtime()
 
@@ -14,9 +12,7 @@ export const run = async (config = {}) => {
     args = {},
   } = config
 
-  const { dir = 'api' } = args
-
-  const { host, port } = gps.gas
+  const { port = 23231, host = '127.0.0.1', dir = 'api' } = args
 
   try {
     const api = await initApi(dir)
