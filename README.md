@@ -1,6 +1,12 @@
 ## @grundstein/gas
 
-### WIP. NOT IN PRODUCTION YET!
+### WIP. NOT IN PRODUCTION, TESTED AND/OR BENCHMARKED YET!
+
+## gas: grundstein api service
+
+### features:
+
+#### api
 
 serves a magic api from a pregenerated magic api bundle.
 
@@ -20,6 +26,6 @@ gas
 // serve specific directory
 gas --dir local/directory/path
 
-// serve on specific port and host
-grundstein-server --port 2323 --host grundstein.it
+// serve on specific host and port
+gas --host grundstein.it --port 2323
 ```
