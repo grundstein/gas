@@ -17,11 +17,10 @@ export const run = async (config = {}) => {
 
     const server = http.createServer(handler(api))
 
-    server.on('clientError', (err, socket) => {
-      socket.end('HTTP/1.1 400 Bad Request\r\n\r\n')
-    })
+    const clientError = middleware.clientError({ host, port, startTime })
+    server.on('clientError', clientError)
 
-    const listener = middleware.listener({ startTime, host, port })
+    const listener = middleware.listener({ host, port, startTime })
     server.listen(port, host, listener)
   } catch (e) {
     log.error(e)
