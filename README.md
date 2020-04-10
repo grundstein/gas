@@ -1,31 +1,25 @@
-## @grundstein/server
+## @grundstein/gas
 
 ### WIP. NOT IN PRODUCTION YET!
 
-serves a local directory (process.cwd() + 'public' is the default)
-
-it is recommended to install [@grundstein/cli](https://github.com/grundstein/cli/) instead,
-which includes both this package,
-as well as [@grundstein/builder](https://github.com/grundstein/builder)
-in one cli.
-
+serves a magic api from a pregenerated magic api bundle.
 
 #### installation
 ```bash
-npm i @grundstein/server
+npm i @grundstein/gas
 ```
 
 #### usage
 ```bash
 // show full help
-grundstein-server --help
+gas --help
 
 // serve the ./public directory
-grundstein-server
+gas
 
-// serve specific directories
-grundstein-server --dir local/directory/path /global/directory/path
+// serve specific directory
+gas --dir local/directory/path
 
-// serve on specific port
-grundstein-server --port 2323
+// serve on specific port and host
+grundstein-server --port 2323 --host grundstein.it
 ```
