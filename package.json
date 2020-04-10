@@ -1,10 +1,10 @@
 {
-  "name": "@grundstein/server",
+  "name": "@grundstein/gas",
   "version": "0.0.1-alpha.0",
   "author": "Wizards & Witches",
-  "homepage": "https://grundstein.github.io/server",
+  "homepage": "https://grundstein.github.io/gas",
   "license": "AGPL-3.0",
-  "description": "NOT YET BENCHMARKED OR IN PRODUCTION! @grundstein/server. serves static webapps and their apis. caches what it can.",
+  "description": "NOT YET BENCHMARKED OR IN PRODUCTION! @grundstein/gas. serves apis for magic apps.",
   "main": "src/index.mjs",
   "engines": {
     "node": ">=13.5.0"
@@ -25,10 +25,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grundstein/server.git"
+    "url": "git+https://github.com/grundstein/gas.git"
   },
   "bugs": {
-    "url": "https://github.com/grundstein/server/issues"
+    "url": "https://github.com/grundstein/gas/issues"
   },
   "dependencies": {
     "@grundstein/commons": "github:grundstein/commons",
@@ -44,8 +44,7 @@
   },
   "keywords": [
     "grundstein",
-    "static",
-    "page",
+    "api",
     "server"
   ],
   "contributors": [
