@@ -17,7 +17,7 @@ const args = {
   },
   single: ['--dir', '--host', '--port'],
   help: {
-    name: 'magic api server',
+    name: 'gas: grundstein api server',
     header: 'serves prebuilt magic apis from a directory.',
     options: {
       '--dir': 'api root directory',
