@@ -1,6 +1,6 @@
 import http from 'http'
 
-import { log } from '@grundstein/commons'
+import { log, middleware } from '@grundstein/commons'
 
 import initApi from './api.mjs'
 import handler from './handler.mjs'
@@ -21,14 +21,7 @@ export const run = async (config = {}) => {
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n')
     })
 
-    server.listen(port, host, () => {
-      const timeToListen = process.hrtime(startTime)
-
-      log.success('Mainthread started', `pid: ${process.pid}`)
-      log(`server listening to ${host}:${port}`)
-
-      log.timeTaken(startTime, 'startup needed:')
-    })
+    server.listen(port, host, middleware.listener({ startTime, host, port }))
   } catch (e) {
     log.error(e)
     process.exit(1)
