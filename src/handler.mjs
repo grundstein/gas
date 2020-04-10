@@ -8,10 +8,7 @@ import { lib, middleware } from '@grundstein/commons'
 const { formatLog, getRandomId, respond } = lib
 
 export const handler = api => async (req, res) => {
-  // assign random id to make this call traceable in logs.
-  req.id = await getRandomId()
-
-  req.headers['x-forwarded-for'] = req.id
+  req = await lib.enhanceRequest(req)
 
   const startTime = log.hrtime()
 
