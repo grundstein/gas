@@ -1,11 +1,10 @@
 import URL from 'url'
 
-import log from '@magic/log'
 import is from '@magic/types'
 
-import { lib, middleware } from '@grundstein/commons'
-
-const { formatLog, getRandomId, respond } = lib
+import { log } from '@grundstein/commons'
+import lib from '@grundstein/commons/lib.mjs'
+import middleware from '@grundstein/commons/middleware.mjs'
 
 export const handler = api => async (req, res) => {
   req = await lib.enhanceRequest(req)
@@ -23,9 +22,7 @@ export const handler = api => async (req, res) => {
       const code = 404
       const body = `Api request urls must start with a version. supported: ${versionKeys.join(' ')}`
 
-      respond(res, { body, code })
-
-      formatLog(req, res, startTime, 'api')
+      lib.respond(req, res, { body, code, type: 'api' })
       return
     }
 
@@ -36,11 +33,9 @@ export const handler = api => async (req, res) => {
       const apiKeys = Object.keys(version)
 
       const code = 404
-      const body = `function not found. Got: ${fn}. Supported: ${apiKeys.join(' ')}`
+      const body = `Function not found. Got: ${fn}. Supported: ${apiKeys.join(' ')}`
 
-      respond(res, { body, code })
-
-      formatLog(req, res, startTime, 'api')
+      lib.respond(req, res, { body, code, time: startTime, type: 'api' })
       return
     }
 
@@ -55,15 +50,12 @@ export const handler = api => async (req, res) => {
       }
     }
 
-    respond(res, await lambda(req, res))
-
-    formatLog(req, res, startTime, 'api')
+    const body = await lambda(req, res)
+    lib.respond(req, res, { body, code: 200, time: startTime, type: 'api' })
     return
   }
 
-  respond(res, { body: '404 - not found.', code: 404 })
-
-  formatLog(req, res, startTime, 404)
+  lib.respond(res, { body: '404 - not found.', code: 404, type: 'api' })
 }
 
 export default handler
