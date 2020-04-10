@@ -21,7 +21,8 @@ export const run = async (config = {}) => {
       socket.end('HTTP/1.1 400 Bad Request\r\n\r\n')
     })
 
-    server.listen(port, host, middleware.listener({ startTime, host, port }))
+    const listener = middleware.listener({ startTime, host, port })
+    server.listen(port, host, listener)
   } catch (e) {
     log.error(e)
     process.exit(1)
