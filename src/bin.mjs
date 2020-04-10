@@ -4,7 +4,7 @@ import cli from '@magic/cli'
 
 import run from './index.mjs'
 
-const args = {
+const opts = {
   options: [
     ['--dir', '-d'],
     ['--host', '-n'],
@@ -34,6 +34,6 @@ gas --dir /api --host api.grundstein.it --port 443
   },
 }
 
-const res = cli(args)
+const res = cli(opts.args)
 
 run(res)
