@@ -34,6 +34,6 @@ gas --dir /api --host api.grundstein.it --port 443
   },
 }
 
-const res = cli(opts.args)
+const { args } = cli(opts)
 
-run(res)
+run(args)
