@@ -18,10 +18,10 @@ const args = {
   single: ['--dir', '--host', '--port'],
   help: {
     name: 'magic api server',
-    header: 'serves magic apis',
+    header: 'serves prebuilt magic apis from a directory.',
     options: {
       '--dir': 'api root directory',
-      '--host': 'internal hostname to listen to, default 127.0.0.1',
+      '--host': 'hostname to listen to, default 127.0.0.1',
       '--port': 'port, default 8080',
     },
     example: `
