@@ -8,11 +8,9 @@ import handler from './handler.mjs'
 export const run = async (config = {}) => {
   const startTime = log.hrtime()
 
-  const {
-    args = {},
-  } = config
+  const { args = {} } = config
 
-  const { port = 23231, host = '127.0.0.1', dir = 'api' } = args
+  const { port = 2351, host = '127.0.0.1', dir = 'api' } = args
 
   try {
     const api = await initApi(dir)

@@ -13,7 +13,7 @@ const args = {
   default: {
     '--dir': 'api',
     '--host': '127.0.0.1',
-    '--port': 2323,
+    '--port': 2351,
   },
   single: ['--dir', '--host', '--port'],
   help: {
@@ -22,14 +22,14 @@ const args = {
     options: {
       '--dir': 'api root directory',
       '--host': 'hostname to listen to, default 127.0.0.1',
-      '--port': 'port, default 8080',
+      '--port': 'port, default 2351',
     },
     example: `
 # serve files in ./api:
 gas
 
 # serve files using an absolute path, custom host and port.
-gas --dir /api --host grundstein --port 8080
+gas --dir /api --host api.grundstein.it --port 443
 `,
   },
 }
