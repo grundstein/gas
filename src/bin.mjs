@@ -12,7 +12,7 @@ const opts = {
   ],
   default: {
     '--dir': 'api',
-    '--host': '127.0.0.1',
+    '--host': '0.0.0.0',
     '--port': 2351,
   },
   single: ['--dir', '--host', '--port'],
@@ -21,15 +21,15 @@ const opts = {
     header: 'serves prebuilt magic apis from a directory.',
     options: {
       '--dir': 'api root directory',
-      '--host': 'hostname to listen to, default 127.0.0.1',
+      '--host': 'hostname to listen to, default 0.0.0.0 - all interfaces',
       '--port': 'port, default 2351',
     },
     example: `
-# serve files in ./api:
+# serve files in /var/www/api:
 gas
 
-# serve files using an absolute path, custom host and port.
-gas --dir /api --host api.grundstein.it --port 443
+# serve files using a local path, custom host and port.
+gas --dir api --host api.grundstein.it --port 2323
 `,
   },
 }
