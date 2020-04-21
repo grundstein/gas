@@ -3,11 +3,11 @@ import URL from 'url'
 import is from '@magic/types'
 
 import { log } from '@grundstein/commons'
-import lib from '@grundstein/commons/lib.mjs'
-import middleware from '@grundstein/commons/middleware.mjs'
+import { enhanceRequest, respond } from '@grundstein/commons/lib.mjs'
+import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
 
 export const handler = api => async (req, res) => {
-  req = await lib.enhanceRequest(req)
+  req = await enhanceRequest(req)
 
   const startTime = log.hrtime()
 
@@ -22,7 +22,7 @@ export const handler = api => async (req, res) => {
       const code = 404
       const body = `Api request urls must start with a version. supported: ${versionKeys.join(' ')}`
 
-      lib.respond(req, res, { body, code, type: 'api' })
+      respond(req, res, { body, code, type: 'api' })
       return
     }
 
@@ -35,14 +35,12 @@ export const handler = api => async (req, res) => {
       const code = 404
       const body = `Function not found. Got: ${fn}. Supported: ${apiKeys.join(' ')}`
 
-      lib.respond(req, res, { body, code, time: startTime, type: 'api' })
+      respond(req, res, { body, code, time: startTime, type: 'api' })
       return
     }
 
     if (req.method === 'POST') {
-      // this middleware expects small chunks of data.
-      // it loads the full request body into ram before returning.
-      req.body = await middleware.body(req)
+      req.body = await bodyMiddleware(req)
 
       if (is.error(req.body)) {
         log.error('E_REQ_BODY_PARSE', req.body)
@@ -51,11 +49,11 @@ export const handler = api => async (req, res) => {
     }
 
     const body = await lambda(req, res)
-    lib.respond(req, res, { body, code: 200, time: startTime, type: 'api' })
+    respond(req, res, { body, code: 200, time: startTime, type: 'api' })
     return
   }
 
-  lib.respond(res, { body: '404 - not found.', code: 404, type: 'api' })
+  respond(res, { body: '404 - not found.', code: 404, type: 'api' })
 }
 
 export default handler
