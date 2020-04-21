@@ -3,7 +3,7 @@ import URL from 'url'
 import is from '@magic/types'
 
 import { log } from '@grundstein/commons'
-import { enhanceRequest, respond } from '@grundstein/commons/lib.mjs'
+import { enhanceRequest, getHostname, respond } from '@grundstein/commons/lib.mjs'
 import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
 
 export const handler = api => async (req, res) => {
@@ -12,11 +12,23 @@ export const handler = api => async (req, res) => {
   const startTime = log.hrtime()
 
   const parsedUrl = URL.parse(req.url)
+  const hostname = getHostname(req)
 
   if (api) {
     const [requestVersion, fn] = parsedUrl.pathname.split('/').filter(a => a)
 
-    const versionKeys = Object.keys(api)
+    console.log(hostname, api)
+    const hostApi = api[hostname]
+
+    if (!hostApi || is.empty(hostApi)) {
+      const code = 404
+      const body = `No api for this host available.`
+
+      respond(req, res, { body, code, type: 'api' })
+      return
+    }
+
+    const versionKeys = Object.keys(hostApi)
 
     if (!versionKeys.includes(requestVersion)) {
       const code = 404
@@ -26,7 +38,7 @@ export const handler = api => async (req, res) => {
       return
     }
 
-    const version = api[requestVersion]
+    const version = hostApi[requestVersion]
     const lambda = version[`/${fn}`]
 
     if (!is.fn(lambda)) {
@@ -49,7 +61,7 @@ export const handler = api => async (req, res) => {
     }
 
     const body = await lambda(req, res)
-    respond(req, res, { body, code: 200, time: startTime, type: 'api' })
+    respond(req, res, { ...body, time: startTime, type: 'api' })
     return
   }
 

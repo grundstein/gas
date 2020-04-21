@@ -22,10 +22,11 @@ export const initApi = async dir => {
   await Promise.all(
     files.map(async file => {
       const relativePath = file.replace(dir, '')
-      const [_, version, ...pathParts] = relativePath.split(path.sep)
+      const [_, host, version, ...pathParts] = relativePath.split(path.sep)
 
-      // initialize this api version if it does not exist yet
-      api[version] = api[version] || {}
+      // initialize this api host and version if it does not exist yet
+      api[host] = api[host] || { [version]: {} }
+
 
       // get absolute path for import
       const absPath = path.join(cwd, file)
@@ -36,7 +37,7 @@ export const initApi = async dir => {
       const ext = path.extname(file)
       const lambdaPath = pathParts.join('/').replace(ext, '')
 
-      api[version][`/${lambdaPath}`] = lambda
+      api[host][version][`/${lambdaPath}`] = lambda
     }),
   )
 
