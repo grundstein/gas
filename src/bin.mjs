@@ -11,7 +11,7 @@ const opts = {
     ['--port', '-p'],
   ],
   default: {
-    '--dir': 'api',
+    '--dir': '/var/www/api',
     '--host': '0.0.0.0',
     '--port': 2351,
   },
@@ -20,7 +20,7 @@ const opts = {
     name: 'gas: grundstein api server',
     header: 'serves prebuilt magic apis from a directory.',
     options: {
-      '--dir': 'api root directory',
+      '--dir': 'api root directory, default /var/www/api',
       '--host': 'hostname to listen to, default 0.0.0.0 - all interfaces',
       '--port': 'port, default 2351',
     },
