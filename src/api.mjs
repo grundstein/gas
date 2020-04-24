@@ -1,7 +1,6 @@
 import path from 'path'
 
-import fs from '@magic/fs'
-import { log } from '@grundstein/commons'
+import { fs, log } from '@grundstein/commons'
 
 export const initApi = async dir => {
   // some servers might have no api.

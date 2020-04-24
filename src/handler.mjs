@@ -1,8 +1,6 @@
 import URL from 'url'
 
-import is from '@magic/types'
-
-import { log } from '@grundstein/commons'
+import { log, is } from '@grundstein/commons'
 import { enhanceRequest, getHostname, respond } from '@grundstein/commons/lib.mjs'
 import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
 
