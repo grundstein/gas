@@ -32,14 +32,11 @@
   },
   "dependencies": {
     "@grundstein/commons": "github:grundstein/commons",
-    "@grundstein/file-store": "github:grundstein/file-store",
-    "@magic/cli": "0.0.24",
-    "@magic/log": "0.1.4",
-    "@magic/types": "0.1.11"
+    "@grundstein/file-store": "github:grundstein/file-store"
   },
   "devDependencies": {
-    "@magic/format": "0.0.8",
-    "@magic/test": "0.1.42"
+    "@magic/format": "0.0.9",
+    "@magic/test": "0.1.43"
   },
   "keywords": [
     "grundstein",
