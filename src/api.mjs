@@ -28,7 +28,6 @@ export const initApi = async config => {
       // initialize this api host and version if it does not exist yet
       api[host] = api[host] || { [version]: {} }
 
-
       // get absolute path for import
       const absPath = path.join(cwd, file)
 
