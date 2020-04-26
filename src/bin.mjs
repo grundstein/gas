@@ -9,20 +9,23 @@ const opts = {
     ['--dir', '-d'],
     ['--host', '-n'],
     ['--port', '-p'],
+    ['--cert-dir', '--cert', '-c'],
   ],
   default: {
     '--dir': '/var/www/api',
-    '--host': '0.0.0.0',
+    '--host': 'gas.grund.stein',
     '--port': 2351,
+    '--cert-dir': '/root/ca/intermediate',
   },
-  single: ['--dir', '--host', '--port'],
+  single: ['--dir', '--host', '--port', '--cert-dir'],
   help: {
     name: 'gas: grundstein api server',
     header: 'serves prebuilt magic apis from a directory.',
     options: {
-      '--dir': 'api root directory, default /var/www/api',
-      '--host': 'hostname to listen to, default 0.0.0.0 - all interfaces',
-      '--port': 'port, default 2351',
+      '--dir': 'api root directory',
+      '--host': 'hostname to listen to',
+      '--port': 'port to listen to',
+      '--cert-dir': 'certificate directory',
     },
     example: `
 # serve files in /var/www/api:
