@@ -25,7 +25,7 @@ const opts = {
       '--dir': 'api root directory',
       '--host': 'hostname to listen to',
       '--port': 'port to listen to',
-      '--cert-dir': 'certificate directory',
+      '--cert-dir': 'ca directory',
     },
     example: `
 # serve files in /var/www/api:
