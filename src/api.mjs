@@ -2,7 +2,9 @@ import path from 'path'
 
 import { fs, log } from '@grundstein/commons'
 
-export const initApi = async dir => {
+export const initApi = async config => {
+  const { dir } = config
+
   // some servers might have no api.
   if (!dir) {
     return {}
@@ -12,7 +14,7 @@ export const initApi = async dir => {
 
   const cwd = process.cwd()
 
-  log.info(`gs-server/api: serving static files from ${dir}`)
+  log.info(`gs-server/api: serving api from ${dir}`)
 
   const files = await fs.getFiles(dir)
 
