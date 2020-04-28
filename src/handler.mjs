@@ -5,7 +5,7 @@ import { enhanceRequest, getHostname, respond } from '@grundstein/commons/lib.mj
 import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
 
 export const handler = api => async (req, res) => {
-  req = await enhanceRequest(req)
+  req = enhanceRequest(req)
 
   const startTime = log.hrtime()
 
