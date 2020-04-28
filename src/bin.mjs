@@ -15,7 +15,7 @@ const opts = {
     '--dir': '/var/www/api',
     '--host': '0.0.0.0',
     '--port': 2351,
-    '--cert-dir': '/root/ca/intermediate',
+    '--cert-dir': '/home/grundstein/ca',
   },
   single: ['--dir', '--host', '--port', '--cert-dir'],
   help: {
