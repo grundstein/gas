@@ -15,7 +15,6 @@ export const handler = api => async (req, res) => {
   if (api) {
     const [requestVersion, fn] = parsedUrl.pathname.split('/').filter(a => a)
 
-    console.log(hostname, api)
     const hostApi = api[hostname]
 
     if (!hostApi || is.empty(hostApi)) {
