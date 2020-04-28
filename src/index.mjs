@@ -1,8 +1,8 @@
-import https from 'https'
+import http from 'http'
 
 import { log } from '@grundstein/commons'
 import * as middleware from '@grundstein/commons/middleware.mjs'
-import { getHostCertificates } from '@grundstein/commons/lib.mjs'
+// import { getHostCertificates } from '@grundstein/commons/lib.mjs'
 
 import initApi from './api.mjs'
 import handler from './handler.mjs'
@@ -13,9 +13,9 @@ export const run = async (config = {}) => {
   try {
     const api = await initApi(config)
 
-    const options = await getHostCertificates(config)
+    const options = {} // await getHostCertificates(config)
 
-    const server = https.createServer(options, handler(api))
+    const server = http.createServer(options, handler(api))
 
     const clientError = middleware.clientError(config)
     server.on('clientError', clientError)
