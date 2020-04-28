@@ -13,7 +13,7 @@ const opts = {
   ],
   default: {
     '--dir': '/var/www/api',
-    '--host': 'gas.grund.stein',
+    '--host': '0.0.0.0',
     '--port': 2351,
     '--cert-dir': '/root/ca/intermediate',
   },
