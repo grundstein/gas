@@ -14,7 +14,7 @@ export const initApi = async config => {
 
   const cwd = process.cwd()
 
-  log.info(`gs-server/api: serving api from ${dir}`)
+  log.info(`@grundstein/gas: serving api from ${dir}`)
 
   const files = await fs.getFiles(dir)
 
@@ -41,7 +41,7 @@ export const initApi = async config => {
     }),
   )
 
-  log.timeTaken(startTime, 'api init took')
+  log.timeTaken(startTime, '@grundstein/gas init took')
 
   return api
 }
