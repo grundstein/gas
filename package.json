@@ -7,7 +7,7 @@
   "description": "NOT YET BENCHMARKED OR IN PRODUCTION! @grundstein/gas. serves apis for magic apps.",
   "main": "src/index.mjs",
   "engines": {
-    "node": ">=13.5.0"
+    "node": ">=14.14.0"
   },
   "engineStrict": true,
   "scripts": {
