@@ -2,6 +2,8 @@ import path from 'path'
 
 import { fs, log } from '@grundstein/commons'
 
+import { pathToFileURL } from 'url'
+
 export const initApi = async config => {
   const { dir } = config
 
@@ -31,7 +33,7 @@ export const initApi = async config => {
       // get absolute path for import
       const absPath = path.join(cwd, file)
 
-      const { default: lambda } = await import(absPath)
+      const { default: lambda } = await import(pathToFileURL(absPath))
 
       // remove the extension from the lambdapath
       const ext = path.extname(file)
