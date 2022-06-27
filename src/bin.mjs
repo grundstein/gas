@@ -10,14 +10,25 @@ const opts = {
     ['--host', '--ip', '-H'],
     ['--port', '-p'],
     ['--cert-dir', '--cert', '-c'],
+    '--cors-origin',
+    '--cors-headers',
   ],
   default: {
     '--dir': '/var/www/api',
     '--host': '0.0.0.0',
     '--port': 2351,
     '--cert-dir': '/home/grundstein/ca',
+    '--cors-origin': '*',
+    '--cors-headers': 'Origin, X-Requested-With, Content-Type, Accept',
   },
-  single: ['--dir', '--host', '--port', '--cert-dir'],
+  single: [
+    '--dir',
+    '--host',
+    '--port',
+    '--cert-dir',
+    '--cors-origin',
+    '--cors-headers',
+  ],
   help: {
     name: 'gas: grundstein api server',
     header: 'serves prebuilt magic apis from a directory.',
@@ -26,6 +37,8 @@ const opts = {
       '--host': 'hostname to listen to',
       '--port': 'port to listen to',
       '--cert-dir': 'ca directory',
+      '--cors-origin': 'value of the Access-Control-Allow-Origin http header',
+      '--cors-headers': 'value of the Access-Controll-Allow-Headers http header',
     },
     example: `
 # serve files in /var/www/api:

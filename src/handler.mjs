@@ -57,8 +57,24 @@ export const handler = api => async (req, res) => {
       }
     }
 
+    const headers = {}
+
+    if (corsOrigin) {
+      let val = '*'
+      if (corsOrigin !== '*') {
+        const forwardedFor = req.headers['x-forwarded-for']
+        if (forwardedFor && corsOrigin.includes(forwardedFor)) {
+          val = forwardedFor
+        }
+      }
+
+      headers['Access-Control-Allow-Origin'] = val
+      headers['Access-Control-Allow-Headers'] = corsHeaders
+    }
+
+
     const body = await lambda(req, res)
-    respond(req, res, { ...body, time: startTime, type: 'api' })
+    respond(req, res, { ...body, time: startTime, headers, type: 'api' })
     return
   }
 
