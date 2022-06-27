@@ -4,7 +4,12 @@ import { log, is } from '@grundstein/commons'
 import { enhanceRequest, getHostname, respond } from '@grundstein/commons/lib.mjs'
 import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
 
-export const handler = api => async (req, res) => {
+export const handler = (api, config) => async (req, res) => {
+  const {
+    corsOrigin,
+    corsHeaders,
+  } = config
+
   req = enhanceRequest(req)
 
   const startTime = log.hrtime()

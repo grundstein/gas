@@ -11,7 +11,7 @@ export const run = async (config = {}) => {
 
     const api = await initApi(config)
 
-    await createServer(config, handler(api))
+    await createServer(config, handler(api, config))
   } catch (e) {
     log.error(e)
     process.exit(1)
