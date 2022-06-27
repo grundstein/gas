@@ -31,7 +31,7 @@ export const initApi = async config => {
       api[host] = api[host] || { [version]: {} }
 
       // get absolute path for import
-      const absPath = path.join(cwd, file)
+      const absPath = path.isAbsolute(file) ? file : path.join(cwd, file)
 
       const { default: lambda } = await import(pathToFileURL(absPath))
 
