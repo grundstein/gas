@@ -1,4 +1,4 @@
-export default (req, res) => {
+export default () => {
   const random = Math.floor(Math.random() * 1000)
   const body = `hello, world. here is some pseudorandom: ${random}`
 
