@@ -1,8 +1,8 @@
-import path from 'path'
+import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 import { fs, log } from '@grundstein/commons'
 
-import { pathToFileURL } from 'url'
 
 export const initApi = async config => {
   const { dir } = config
