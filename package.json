@@ -1,7 +1,7 @@
 {
   "name": "@grundstein/gas",
   "version": "0.0.2",
-  "author": "Wizards & Witches",
+  "author": "SystemKollektiv",
   "homepage": "https://grundstein.github.io/gas",
   "license": "AGPL-3.0",
   "description": "NOT YET BENCHMARKED OR IN PRODUCTION! @grundstein/gas. serves apis for magic apps.",
@@ -47,6 +47,10 @@
     {
       "name": "jascha ehrenreich",
       "github": "jaeh"
+    },
+    {
+      "name": "litto",
+      "github": "mslitto"
     }
   ]
 }
