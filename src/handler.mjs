@@ -30,7 +30,6 @@ export const handler = (api, config) => async (stream, headers) => {
 
   const fullUrl = authority[url]
 
-
   const parsedUrl = URL.parse(url)
   const hostname = lib.getHostname(headers)
 
