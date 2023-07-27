@@ -14,7 +14,7 @@
     "start": "npm run dev",
     "test": "t",
     "format": "f -w",
-    "dev": "src/bin.mjs --dir api"
+    "dev": "./src/bin.mjs --dir api --cert-dir node_modules/@grundstein/commons/src/certificates"
   },
   "bin": {
     "grundstein-api-server": "src/bin.mjs",
