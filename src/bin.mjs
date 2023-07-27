@@ -1,8 +1,18 @@
 #!/usr/bin/env node
 
+import http2 from 'node:http2'
+
 import { cli } from '@grundstein/commons'
 
 import run from './index.mjs'
+
+const {
+  HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN,
+  HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,
+  HTTP2_HEADER_ORIGIN,
+  HTTP2_HEADER_CONTENT_TYPE,
+  HTTP2_HEADER_ACCEPT,
+} = http2.constants
 
 const opts = {
   options: [
@@ -19,16 +29,9 @@ const opts = {
     '--port': 2351,
     '--cert-dir': '/home/grundstein/ca',
     '--cors-origin': '*',
-    '--cors-headers': 'Origin, X-Requested-With, Content-Type, Accept',
+    '--cors-headers': `${HTTP2_HEADER_ORIGIN}, x-requested-with, ${HTTP2_HEADER_CONTENT_TYPE}, ${HTTP2_HEADER_ACCEPT}`,
   },
-  single: [
-    '--dir',
-    '--host',
-    '--port',
-    '--cert-dir',
-    '--cors-origin',
-    '--cors-headers',
-  ],
+  single: ['--dir', '--host', '--port', '--cert-dir', '--cors-origin', '--cors-headers'],
   help: {
     name: 'gas: grundstein api server',
     header: 'serves prebuilt magic apis from a directory.',
@@ -37,15 +40,15 @@ const opts = {
       '--host': 'hostname to listen to',
       '--port': 'port to listen to',
       '--cert-dir': 'ca directory',
-      '--cors-origin': 'value of the Access-Control-Allow-Origin http header',
-      '--cors-headers': 'value of the Access-Controll-Allow-Headers http header',
+      '--cors-origin': `value of the ${HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN} http header`,
+      '--cors-headers': `value of the ${HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS} http header`,
     },
     example: `
 # serve files in /var/www/api:
 gas
 
 # serve files using a local path, custom host and port.
-gas --dir api --host api.grundstein.it --port 2323
+gas --dir api --host api.grundstein.it --port 2323 --cert-dir node_modules/@grundstein/commons/src/certificates
 `,
   },
 }
