@@ -31,12 +31,12 @@
     "url": "https://github.com/grundstein/gas/issues"
   },
   "dependencies": {
-    "@grundstein/commons": "0.0.9",
+    "@grundstein/commons": "0.0.10",
     "@grundstein/file-store": "github:grundstein/file-store"
   },
   "devDependencies": {
-    "@magic/format": "0.0.40",
-    "@magic/test": "0.2.11"
+    "@magic/format": "0.0.51",
+    "@magic/test": "0.2.18"
   },
   "keywords": [
     "grundstein",
