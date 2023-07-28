@@ -31,7 +31,7 @@
     "url": "https://github.com/grundstein/gas/issues"
   },
   "dependencies": {
-    "@grundstein/commons": "github:grundstein/commons"
+    "@grundstein/commons": "github:grundstein/commons#http2"
   },
   "devDependencies": {
     "@magic/format": "0.0.51",
