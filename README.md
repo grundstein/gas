@@ -11,11 +11,13 @@
 serves a magic api from a pregenerated magic api bundle.
 
 #### installation
+
 ```bash
 npm i @grundstein/gas
 ```
 
 #### usage
+
 ```bash
 // show full help
 gas --help
@@ -31,7 +33,9 @@ gas --host grundstein.it --port 2323
 ```
 
 #### v0.0.1
+
 first release
 
 #### v0.0.2
+
 use url.pathToFileURL to make windows await import api files correctly

@@ -21,14 +21,7 @@ const opts = {
     '--cors-origin': '*',
     '--cors-headers': 'Origin, X-Requested-With, Content-Type, Accept',
   },
-  single: [
-    '--dir',
-    '--host',
-    '--port',
-    '--cert-dir',
-    '--cors-origin',
-    '--cors-headers',
-  ],
+  single: ['--dir', '--host', '--port', '--cert-dir', '--cors-origin', '--cors-headers'],
   help: {
     name: 'gas: grundstein api server',
     header: 'serves prebuilt magic apis from a directory.',

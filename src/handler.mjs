@@ -5,10 +5,7 @@ import { enhanceRequest, getHostname, respond } from '@grundstein/commons/lib.mj
 import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
 
 export const handler = (api, config) => async (req, res) => {
-  const {
-    corsOrigin,
-    corsHeaders,
-  } = config
+  const { corsOrigin, corsHeaders } = config
 
   req = enhanceRequest(req)
 
@@ -56,7 +53,7 @@ export const handler = (api, config) => async (req, res) => {
     if (req.method === 'POST') {
       try {
         req.body = await bodyMiddleware(req)
-      } catch(e) {
+      } catch (e) {
         log.error('E_REQ_BODY_PARSE', e)
         req.body = ''
       }
@@ -76,7 +73,6 @@ export const handler = (api, config) => async (req, res) => {
       headers['Access-Control-Allow-Origin'] = val
       headers['Access-Control-Allow-Headers'] = corsHeaders
     }
-
 
     const body = await lambda(req, res)
     respond(req, res, { ...body, time: startTime, headers, type: 'api' })
