@@ -54,10 +54,10 @@ export const handler = (api, config) => async (req, res) => {
     }
 
     if (req.method === 'POST') {
-      req.body = await bodyMiddleware(req)
-
-      if (is.error(req.body)) {
-        log.error('E_REQ_BODY_PARSE', req.body)
+      try {
+        req.body = await bodyMiddleware(req)
+      } catch(e) {
+        log.error('E_REQ_BODY_PARSE', e)
         req.body = ''
       }
     }
