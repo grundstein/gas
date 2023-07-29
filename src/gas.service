@@ -1,0 +1,13 @@
+[Unit]
+Description=gas - grundstein api service
+Documentation=https://docs.grundstein.it/gas
+After=network.target
+
+[Service]
+Type=simple
+User=grundstein
+ExecStart=/usr/bin/gas
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
