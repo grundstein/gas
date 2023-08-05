@@ -1,18 +1,24 @@
 #!/usr/bin/env node
 
-import http2 from 'node:http2'
+import { cli, constants, lib } from '@grundstein/commons'
 
-import { cli } from '@grundstein/commons'
+import { defaults } from './defaults.mjs'
 
 import run from './index.mjs'
 
 const {
   HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN,
   HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,
-  HTTP2_HEADER_ORIGIN,
-  HTTP2_HEADER_CONTENT_TYPE,
-  HTTP2_HEADER_ACCEPT,
-} = http2.constants
+} = constants
+
+const {
+  GAS_DIR = defaults.dir,
+  GAS_HOST = defaults.host,
+  GAS_PORT = defaults.port,
+  GAS_CERT_DIR = defaults.certDir,
+  GAS_CORS_ORIGIN = defaults.corsOrigin,
+  GAS_CORS_HEADERS = defaults.corsHeaders,
+} = await lib.addEnv()
 
 const opts = {
   options: [
@@ -24,12 +30,12 @@ const opts = {
     '--cors-headers',
   ],
   default: {
-    '--dir': '/var/www/api',
-    '--host': '0.0.0.0',
-    '--port': 2351,
-    '--cert-dir': '/home/grundstein/ca',
-    '--cors-origin': '*',
-    '--cors-headers': `${HTTP2_HEADER_ORIGIN}, x-requested-with, ${HTTP2_HEADER_CONTENT_TYPE}, ${HTTP2_HEADER_ACCEPT}`,
+    '--dir': GAS_DIR,
+    '--host': GAS_HOST,
+    '--port': GAS_PORT,
+    '--cert-dir': GAS_CERT_DIR,
+    '--cors-origin': GAS_CORS_ORIGIN,
+    '--cors-headers': GAS_CORS_HEADERS,
   },
   single: ['--dir', '--host', '--port', '--cert-dir', '--cors-origin', '--cors-headers'],
   help: {
