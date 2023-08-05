@@ -3,7 +3,6 @@ import { pathToFileURL } from 'node:url'
 
 import { fs, log } from '@grundstein/commons'
 
-
 export const initApi = async config => {
   const { dir } = config
 

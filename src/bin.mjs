@@ -6,10 +6,8 @@ import { defaults } from './defaults.mjs'
 
 import run from './index.mjs'
 
-const {
-  HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN,
-  HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,
-} = constants
+const { HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS } =
+  constants
 
 const {
   GAS_DIR = defaults.dir,
