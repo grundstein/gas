@@ -16,6 +16,7 @@ const {
   GAS_CERT_DIR = defaults.certDir,
   GAS_CORS_ORIGIN = defaults.corsOrigin,
   GAS_CORS_HEADERS = defaults.corsHeaders,
+  GRUNDSTEIN_CERT_DIR = defaults.certDir,
 } = await lib.addEnv()
 
 const opts = {
@@ -34,6 +35,7 @@ const opts = {
     '--cert-dir': GAS_CERT_DIR,
     '--cors-origin': GAS_CORS_ORIGIN,
     '--cors-headers': GAS_CORS_HEADERS,
+    '--cert-dir': GRUNDSTEIN_CERT_DIR,
   },
   single: ['--dir', '--host', '--port', '--cert-dir', '--cors-origin', '--cors-headers'],
   help: {

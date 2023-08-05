@@ -9,4 +9,5 @@ export const defaults = {
   certDir: '/home/grundstein/ca',
   corsOrigin: '*',
   corsHeaders: `${HTTP2_HEADER_ORIGIN}, x-requested-with, ${HTTP2_HEADER_CONTENT_TYPE}, ${HTTP2_HEADER_ACCEPT}`,
+  certDir: path.join(process.cwd(), 'node_modules', '@grundstein', 'commons', 'src', 'certificates'),
 }
