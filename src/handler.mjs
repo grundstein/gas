@@ -22,7 +22,7 @@ export const handler = (api, config) => async (stream, headers) => {
 
   const url = headers[HTTP2_HEADER_PATH]
   const authority = headers[HTTP2_HEADER_AUTHORITY]
-  console.log(url, authority)
+
   /*
    * TODO: only allow certain authority fields.
    * use /home/grundstein/environment as the config file
