@@ -115,7 +115,7 @@ export const handler = (api, config) => async (stream, headers) => {
     }
 
     /* actually execute the api function */
-    const result = await lambda(stream, headers, body)
+    const result = await lambda({ stream, headers, body })
 
     const response = {
       ...result,
