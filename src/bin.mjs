@@ -25,6 +25,7 @@ const opts = {
     ['--host', '--ip', '-H'],
     ['--port', '-p'],
     ['--cert-dir', '--cert', '-c'],
+    ['--data-file', '--data', '--db'],
     '--cors-origin',
     '--cors-headers',
   ],
@@ -37,13 +38,14 @@ const opts = {
     '--cors-headers': GAS_CORS_HEADERS,
     '--cert-dir': GRUNDSTEIN_CERT_DIR,
   },
-  single: ['--dir', '--host', '--port', '--cert-dir', '--cors-origin', '--cors-headers'],
+  single: ['--dir', '--data-file', '--host', '--port', '--cert-dir', '--cors-origin', '--cors-headers'],
   help: {
     name: 'gas: grundstein api server',
     header: 'serves prebuilt magic apis from a directory.',
     options: {
       '--dir': 'api root directory',
       '--host': 'hostname to listen to',
+      '--data-file': 'file that loads the db data, expects async fn or object',
       '--port': 'port to listen to',
       '--cert-dir': 'ca directory',
       '--cors-origin': `value of the ${HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN} http header`,
@@ -52,7 +54,6 @@ const opts = {
     example: `
 # serve files in /var/www/api:
 gas
-
 # serve files using a local path, custom host and port.
 gas --dir api --host api.grundstein.it --port 2323 --cert-dir node_modules/@grundstein/commons/src/certificates
 `,
