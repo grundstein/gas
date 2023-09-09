@@ -1,5 +1,5 @@
 import http2 from 'node:http2'
-import URL from 'node:url'
+import { URL } from 'node:url'
 
 import { log, is, lib } from '@grundstein/commons'
 import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
@@ -21,7 +21,7 @@ export const handler = args => async (stream, headers) => {
 
   const startTime = log.hrtime()
 
-  const url = headers[HTTP2_HEADER_PATH]
+  const headerPath = headers[HTTP2_HEADER_PATH]
   const authority = headers[HTTP2_HEADER_AUTHORITY]
 
   /*
@@ -29,9 +29,8 @@ export const handler = args => async (stream, headers) => {
    * use /home/grundstein/environment as the config file
    */
 
-  const fullUrl = authority[url]
-
-  const parsedUrl = URL.parse(url)
+  const fullUrl = `https://${authority}${headerPath}`
+  const parsedUrl = new URL(fullUrl)
   const hostname = lib.getHostname(headers)
 
   if (api) {
