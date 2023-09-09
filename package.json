@@ -35,7 +35,7 @@
     "@grundstein/commons": "github:grundstein/commons#http2"
   },
   "devDependencies": {
-    "@magic/format": "0.0.51",
+    "@magic/format": "0.0.52",
     "@magic/test": "0.2.18"
   },
   "keywords": [
