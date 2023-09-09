@@ -6,6 +6,7 @@
   "license": "AGPL-3.0",
   "description": "NOT YET BENCHMARKED OR IN PRODUCTION! @grundstein/gas. serves apis for magic apps.",
   "main": "src/index.mjs",
+  "type": "module",
   "engines": {
     "node": ">=14.14.0"
   },
