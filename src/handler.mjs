@@ -14,7 +14,7 @@ const {
 } = http2.constants
 
 export const handler = args => async (stream, headers) => {
-  const { api } = args
+  const { api, db } = args
   const { corsOrigin, corsHeaders } = args.config
 
   stream = lib.enhanceRequest(stream)
@@ -115,7 +115,7 @@ export const handler = args => async (stream, headers) => {
     }
 
     /* actually execute the api function */
-    const result = await lambda({ stream, headers, body })
+    const result = await lambda({ api, db, stream, headers, body })
 
     const response = {
       ...result,
