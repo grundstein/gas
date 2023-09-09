@@ -13,8 +13,9 @@ const {
   HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,
 } = http2.constants
 
-export const handler = (api, config) => async (stream, headers) => {
-  const { corsOrigin, corsHeaders } = config
+export const handler = args => async (stream, headers) => {
+  const { api } = args
+  const { corsOrigin, corsHeaders } = args.config
 
   stream = lib.enhanceRequest(stream)
 
