@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import { fs, is, log } from '@grundstein/commons'
+import { is } from '@grundstein/commons'
 
 export const initDb = async config => {
   const { dir } = config
@@ -20,7 +20,7 @@ export const initDb = async config => {
     dbFile = dbFile + '.js'
   }
 
-  const urlPath = URL.pathToFileURL(maybeDataFile)
+  const urlPath = pathToFileURL(maybeDataFile)
   const { db } = await import(urlPath)
   if (is.fn(db)) {
     return await db(config)
