@@ -5,7 +5,7 @@ import { log, is, lib } from '@grundstein/commons'
 import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
 
 const {
-  HTTP2_HEADER_AUTHORITY,
+  // HTTP2_HEADER_AUTHORITY,
   HTTP2_HEADER_PATH,
   HTTP2_HEADER_METHOD,
   HTTP2_HEADER_STATUS,
@@ -13,28 +13,30 @@ const {
   HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,
 } = http2.constants
 
-export const handler = args => async (stream, headers) => {
-  const { api, db } = args
-  const { corsOrigin, corsHeaders } = args.config
+export const handler = (api, config = {}) => async (stream, headers) => {
+  const { corsOrigin, corsHeaders } = config
 
   stream = lib.enhanceRequest(stream)
 
   const startTime = log.hrtime()
 
   const headerPath = headers[HTTP2_HEADER_PATH]
-  const authority = headers[HTTP2_HEADER_AUTHORITY]
 
   /*
-   * TODO: only allow certain authority fields.
-   * use /home/grundstein/environment as the config file
-   */
+  * TODO: only allow certain authority fields.
+  * use /home/grundstein/environment as the config file
+  */
 
-  const fullUrl = `https://${authority}${headerPath}`
-  const parsedUrl = new URL(fullUrl)
+  // const authority = headers[HTTP2_HEADER_AUTHORITY]
+  // if (!authority) {
+  //   const [host, port] = authority.split(':')
+  // }
+
   const hostname = lib.getHostname(headers)
+  const parsedUrl = new URL('https://' + hostname + headerPath)
 
   if (api) {
-    const [requestVersion, fn] = parsedUrl.pathname.split('/').filter(a => a)
+    const [requestVersion, ...fn] = parsedUrl.pathname.split('/').filter(a => a)
 
     const hostApi = api[hostname]
 
@@ -47,8 +49,8 @@ export const handler = args => async (stream, headers) => {
         type: 'api',
         time: startTime,
       }
-
       lib.respond(stream, headers, response)
+
       return
     }
 
@@ -69,7 +71,8 @@ export const handler = args => async (stream, headers) => {
     }
 
     const version = hostApi[requestVersion]
-    const lambda = version[`/${fn}`]
+    const fullPath = `/${fn.join('/')}`
+    const lambda = version[fullPath]
 
     if (!is.fn(lambda)) {
       const apiKeys = Object.keys(version)
@@ -98,7 +101,7 @@ export const handler = args => async (stream, headers) => {
       }
     }
 
-    const head = {}
+    const defaultHead = {}
 
     if (corsOrigin) {
       let val = '*'
@@ -110,15 +113,24 @@ export const handler = args => async (stream, headers) => {
         }
       }
 
-      head[HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN] = val
-      head[HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
+      defaultHead[HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN] = val
+      defaultHead[HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
     }
 
     /* actually execute the api function */
-    const result = await lambda({ api, db, stream, headers, body })
+    const result = await lambda({ api, body, headers, stream, url: parsedUrl })
+
+    const head = {
+      ...defaultHead,
+      ...result.head,
+    }
+
+    /* todo: find out other keys in result and explicitly load them here */
+    const { code } = result
 
     const response = {
       ...result,
+      code,
       time: startTime,
       head,
       type: 'api',
