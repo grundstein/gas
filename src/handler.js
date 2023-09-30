@@ -2,7 +2,7 @@ import http2 from 'node:http2'
 import { URL } from 'node:url'
 
 import { log, is, lib } from '@grundstein/commons'
-import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
+import { body as bodyMiddleware } from '@grundstein/commons/middleware.js'
 
 const {
   // HTTP2_HEADER_AUTHORITY,

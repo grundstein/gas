@@ -2,9 +2,9 @@
 
 import { cli, constants, lib } from '@grundstein/commons'
 
-import { defaults } from './defaults.mjs'
+import { defaults } from './defaults.js'
 
-import run from './index.mjs'
+import run from './index.js'
 
 const { HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS } =
   constants
