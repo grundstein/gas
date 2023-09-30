@@ -13,134 +13,137 @@ const {
   HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS,
 } = http2.constants
 
-export const handler = ({ api, config = {} }) => async (stream, headers) => {
-  const { corsOrigin, corsHeaders } = config
+export const handler =
+  ({ api, config = {} }) =>
+  async (stream, headers) => {
+    const { corsOrigin, corsHeaders } = config
 
-  stream = lib.enhanceRequest(stream)
+    stream = lib.enhanceRequest(stream)
 
-  const startTime = log.hrtime()
+    const startTime = log.hrtime()
 
-  const headerPath = headers[HTTP2_HEADER_PATH]
+    const headerPath = headers[HTTP2_HEADER_PATH]
 
-  /*
-  * TODO: only allow certain authority fields.
-  * use /home/grundstein/environment as the config file
-  */
+    /*
+     * TODO: only allow certain authority fields.
+     * use /home/grundstein/environment as the config file
+     */
 
-  // const authority = headers[HTTP2_HEADER_AUTHORITY]
-  // if (!authority) {
-  //   const [host, port] = authority.split(':')
-  // }
+    // const authority = headers[HTTP2_HEADER_AUTHORITY]
+    // if (!authority) {
+    //   const [host, port] = authority.split(':')
+    // }
 
-  const hostname = lib.getHostname(headers)
-  const parsedUrl = new URL('https://' + hostname + headerPath)
+    const hostname = lib.getHostname(headers)
+    const parsedUrl = new URL('https://' + hostname + headerPath)
 
-  if (api) {
-    const [requestVersion, ...fn] = parsedUrl.pathname.split('/').filter(a => a)
+    if (api) {
+      const [requestVersion, ...fn] = parsedUrl.pathname.split('/').filter(a => a)
 
-    const hostApi = api[hostname]
+      const hostApi = api.hosts[hostname]
 
-    if (!hostApi || is.empty(hostApi)) {
-      const response = {
-        head: {
-          [HTTP2_HEADER_STATUS]: 404,
-        },
-        body: `No api for this host available.`,
-        type: 'api',
-        time: startTime,
-      }
-      lib.respond(stream, headers, response)
+      if (!hostApi || is.empty(hostApi)) {
+        const response = {
+          head: {
+            [HTTP2_HEADER_STATUS]: 404,
+          },
+          body: `No api for this host available.`,
+          type: 'api',
+          time: startTime,
+        }
+        lib.respond(stream, headers, response)
 
-      return
-    }
-
-    const versionKeys = Object.keys(hostApi)
-
-    if (!versionKeys.includes(requestVersion)) {
-      const response = {
-        headers: {
-          [HTTP2_HEADER_STATUS]: 404,
-        },
-        body: `Api request urls must start with a version. supported: ${versionKeys.join(' ')}`,
-        type: 'api',
-        time: startTime,
+        return
       }
 
-      lib.respond(stream, headers, response)
-      return
-    }
+      const versionKeys = Object.keys(hostApi)
 
-    const version = hostApi[requestVersion]
-    const fullPath = `/${fn.join('/')}`
-    const lambda = version[fullPath]
+      if (!versionKeys.includes(requestVersion)) {
+        const response = {
+          headers: {
+            [HTTP2_HEADER_STATUS]: 404,
+          },
+          body: `Api request urls must start with a version. supported: ${versionKeys.join(' ')}`,
+          type: 'api',
+          time: startTime,
+        }
 
-    if (!is.fn(lambda)) {
-      const apiKeys = Object.keys(version)
-
-      const response = {
-        head: {
-          [HTTP2_HEADER_STATUS]: 404,
-        },
-        body: `Function not found. Got: ${fn}. Supported: ${apiKeys.join(' ')}`,
-        type: 'api',
-        time: startTime,
+        lib.respond(stream, headers, response)
+        return
       }
 
-      lib.respond(stream, headers, response)
-      return
-    }
+      const version = hostApi[requestVersion]
+      const fullPath = `/${fn.join('/')}`
+      const lambda = version[fullPath]
+      const { db, schema } = version
 
-    let body
+      if (!is.fn(lambda)) {
+        const apiKeys = Object.keys(version)
 
-    if (headers[HTTP2_HEADER_METHOD] === 'POST') {
-      body = await bodyMiddleware(stream, headers)
+        const response = {
+          head: {
+            [HTTP2_HEADER_STATUS]: 404,
+          },
+          body: `Function not found. Got: ${fn}. Supported: ${apiKeys.join(' ')}`,
+          type: 'api',
+          time: startTime,
+        }
 
-      if (is.error(body)) {
-        log.error('E_REQ_BODY_PARSE', body)
-        body = ''
+        lib.respond(stream, headers, response)
+        return
       }
-    }
 
-    const defaultHead = {}
+      let body
 
-    if (corsOrigin) {
-      let val = '*'
+      if (headers[HTTP2_HEADER_METHOD] === 'POST') {
+        body = await bodyMiddleware(stream, headers)
 
-      if (corsOrigin !== '*') {
-        const forwardedFor = headers['x-forwarded-for']
-        if (forwardedFor && corsOrigin.includes(forwardedFor)) {
-          val = forwardedFor
+        if (is.error(body)) {
+          log.error('E_REQ_BODY_PARSE', body)
+          body = ''
         }
       }
 
-      defaultHead[HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN] = val
-      defaultHead[HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
+      const defaultHead = {}
+
+      if (corsOrigin) {
+        let val = '*'
+
+        if (corsOrigin !== '*') {
+          const forwardedFor = headers['x-forwarded-for']
+          if (forwardedFor && corsOrigin.includes(forwardedFor)) {
+            val = forwardedFor
+          }
+        }
+
+        defaultHead[HTTP2_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN] = val
+        defaultHead[HTTP2_HEADER_ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
+      }
+
+      /* actually execute the api function */
+      const result = await lambda({ api, db, schema, body, headers, stream, url: parsedUrl })
+
+      const head = {
+        ...defaultHead,
+        ...result.head,
+      }
+
+      /* todo: find out other keys in result and explicitly load them here */
+      const { code } = result
+
+      const response = {
+        ...result,
+        code,
+        time: startTime,
+        head,
+        type: 'api',
+      }
+
+      lib.respond(stream, headers, response)
+      return
     }
 
-    /* actually execute the api function */
-    const result = await lambda({ api, body, headers, stream, url: parsedUrl })
-
-    const head = {
-      ...defaultHead,
-      ...result.head,
-    }
-
-    /* todo: find out other keys in result and explicitly load them here */
-    const { code } = result
-
-    const response = {
-      ...result,
-      code,
-      time: startTime,
-      head,
-      type: 'api',
-    }
-
-    lib.respond(stream, headers, response)
-    return
+    lib.respond(stream, headers, { body: '404 - not found.', code: 404, type: 'api' })
   }
-
-  lib.respond(stream, headers, { body: '404 - not found.', code: 404, type: 'api' })
-}
 
 export default handler
