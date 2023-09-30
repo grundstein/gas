@@ -18,4 +18,6 @@ export const run = async (config = {}) => {
   }
 }
 
+export { query } from './lib/index.js'
+
 export default run
