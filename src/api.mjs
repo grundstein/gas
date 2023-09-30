@@ -26,7 +26,7 @@ export const initApi = async config => {
   await Promise.all(
     files.map(async file => {
       const relativePath = file.replace(dir, '')
-      const [_, host, version] = relativePath.split(path.sep)
+      const [_, host, version, ...pathParts] = relativePath.split(path.sep)
 
       // initialize this api host and version if it does not exist yet
       if (!api.hosts[host]) {
