@@ -3,6 +3,8 @@ import { pathToFileURL } from 'node:url'
 
 import { fs, log } from '@grundstein/commons'
 
+import { query } from '../src/index.js'
+
 const cwd = process.cwd()
 
 export const initApi = async config => {
@@ -54,6 +56,44 @@ export const initApi = async config => {
 
           if (schema) {
             api.hosts[host][version].schema = schema
+
+            const schemaEntries = Object.entries(schema)
+
+            schemaEntries.forEach(([k, v]) => {
+              const searchKeys = []
+              const valueEntries = Object.entries(v)
+              valueEntries.forEach(([kk, vv]) => {
+                if (vv.type === 'string' || vv.type === 'slug') {
+                  if (vv.multiple) {
+                    searchKeys.push({ key: kk, fuzzy: true })
+                  } else {
+                    searchKeys.push(kk)
+                  }
+                } else if (vv.type === 'array' && vv.itemType === 'string') {
+                  searchKeys.push(kk)
+                } else if (vv.type === 'boolean') {
+                  searchKeys.push({ key: kk, boolean: true })
+                }
+              })
+
+              api.hosts[host][version][`/${k}`] = ({ url }) => {
+                /* no query params needed */
+                const filtered = query.filter(db[k], url, searchKeys)
+
+                if (!filtered || !filtered.length) {
+                  return {
+                    code: 404,
+                    body: 'Not found',
+                  }
+                }
+
+                return {
+                  code: 200,
+                  body: JSON.stringify(filtered),
+                  json: true,
+                }
+              }
+            })
           }
         }
       } else if (!api.hosts[host][version]) {
