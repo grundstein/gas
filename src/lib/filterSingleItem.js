@@ -2,7 +2,7 @@ import { is } from '@grundstein/commons'
 
 import { anyToLowerCase } from './anyToLowerCase.js'
 
-export const searchSingleItem = (item, [key, params, options]) => {
+export const filterSingleItem = (val, params, options) => {
   /*
    * if there are no params, we do not filter at all.
    */
@@ -10,7 +10,7 @@ export const searchSingleItem = (item, [key, params, options]) => {
     return false
   }
 
-  const val = anyToLowerCase(item[key])
+  val = anyToLowerCase(val)
   params = anyToLowerCase(params)
 
   /*
