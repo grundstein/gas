@@ -3,7 +3,7 @@ import { pathToFileURL } from 'node:url'
 
 import { fs, log } from '@grundstein/commons'
 
-import { query } from '../src/index.js'
+import { query } from './lib/index.js'
 
 const cwd = process.cwd()
 
