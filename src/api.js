@@ -64,7 +64,7 @@ export const initApi = async config => {
               const valueEntries = Object.entries(v)
               valueEntries.forEach(([kk, vv]) => {
                 if (vv.type === 'string' || vv.type === 'slug') {
-                  if (vv.multiple) {
+                  if (vv.multiple || kk === 'slug') {
                     searchKeys.push({ key: kk, fuzzy: true })
                   } else {
                     searchKeys.push(kk)
