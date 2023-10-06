@@ -33,7 +33,6 @@ const opts = {
     '--dir': GAS_DIR,
     '--host': GAS_HOST,
     '--port': GAS_PORT,
-    '--cert-dir': GAS_CERT_DIR,
     '--cors-origin': GAS_CORS_ORIGIN,
     '--cors-headers': GAS_CORS_HEADERS,
     '--cert-dir': GRUNDSTEIN_CERT_DIR,
