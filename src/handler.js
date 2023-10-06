@@ -51,6 +51,7 @@ export const handler =
           type: 'api',
           time: startTime,
         }
+
         lib.respond(stream, headers, response)
 
         return
@@ -78,7 +79,7 @@ export const handler =
       const { db, schema } = version
 
       if (!is.fn(lambda)) {
-        const apiKeys = Object.keys(version)
+        const apiKeys = Object.keys(version).filter(k => k.startsWith('/') && !k.startsWith('/_'))
 
         const response = {
           head: {
