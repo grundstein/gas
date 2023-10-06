@@ -8,22 +8,26 @@ export const getSearchFromParams = (url, searchKeys) => {
   /** @type [string, string[], object][] */
   const search = []
 
-  searchKeys.forEach(key => {
+  searchKeys.forEach(searchKey => {
     let options
 
-    if (is.objectNative(key)) {
-      const { key: k, ...o } = key
+    /*
+     * allow
+     */
+    if (is.objectNative(searchKey)) {
+      const { key: k, ...o } = searchKey
       options = o
-      key = k.toLowerCase()
+      searchKey = k.toLowerCase()
     }
 
-    const params = url.searchParams
-      .getAll(key)
+    const params = url.searchParams.getAll(searchKey)
+
+    const filteredParams = params
       .filter(a => a)
       .map(a => a.toLowerCase())
 
-    if (params.length) {
-      search.push([key, params, options])
+    if (filteredParams.length) {
+      search.push([searchKey, filteredParams, options])
     }
   })
 

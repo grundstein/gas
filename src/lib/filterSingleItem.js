@@ -2,7 +2,9 @@ import { is } from '@grundstein/commons'
 
 import { anyToLowerCase } from './anyToLowerCase.js'
 
-export const filterSingleItem = (val, params, options) => {
+export const filterSingleItem = (searchParams, item) => {
+  const [key, params, options] = searchParams
+
   /*
    * if there are no params, we do not filter at all.
    */
@@ -10,8 +12,9 @@ export const filterSingleItem = (val, params, options) => {
     return false
   }
 
-  val = anyToLowerCase(val)
   params = anyToLowerCase(params)
+
+  const val = anyToLowerCase(item[key])
 
   /*
    * we have an array,
@@ -19,7 +22,15 @@ export const filterSingleItem = (val, params, options) => {
    * then return
    */
   if (is.array(val)) {
-    return val.some(i => params.includes(i))
+    const hasMatch = val.some(v => {
+      if (is.arr(params)) {
+        return params.some(p => v.includes(p))
+      } else {
+        return v.includes(params)
+      }
+    })
+
+    return !hasMatch
   }
 
   if (options?.boolean) {
@@ -36,8 +47,8 @@ export const filterSingleItem = (val, params, options) => {
    * a fuzzy search does a substring compare
    */
   if (options?.fuzzy) {
-    const filteredParams = params.filter(param => param.includes(val) || val.includes(param))
-    return filteredParams.length > 0
+    const filteredParams = params.filter(param => val.includes(param))
+    return filteredParams.length <= 0
   }
 
   /*
