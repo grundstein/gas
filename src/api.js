@@ -77,7 +77,6 @@ export const initApi = async config => {
               })
 
               api.hosts[host][version][`/${k}`] = ({ url }) => {
-                /* no query params needed */
                 const filtered = query.filter(db[k], url, searchKeys)
 
                 if (!filtered || !filtered.length) {
