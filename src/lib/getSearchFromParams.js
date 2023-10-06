@@ -22,9 +22,7 @@ export const getSearchFromParams = (url, searchKeys) => {
 
     const params = url.searchParams.getAll(searchKey)
 
-    const filteredParams = params
-      .filter(a => a)
-      .map(a => a.toLowerCase())
+    const filteredParams = params.filter(a => a).map(a => a.toLowerCase())
 
     if (filteredParams.length) {
       search.push([searchKey, filteredParams, options])
