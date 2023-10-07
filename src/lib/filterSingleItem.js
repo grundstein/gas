@@ -1,6 +1,4 @@
-import { is } from '@grundstein/commons'
-
-import { anyToLowerCase } from './anyToLowerCase.js'
+import { is, lib } from '@grundstein/commons'
 
 export const filterSingleItem = (searchParams, item) => {
   const [key, params, options] = searchParams
@@ -12,9 +10,9 @@ export const filterSingleItem = (searchParams, item) => {
     return false
   }
 
-  params = anyToLowerCase(params)
+  params = lib.anyToLowerCase(params)
 
-  const val = anyToLowerCase(item[key])
+  const val = lib.anyToLowerCase(item[key])
 
   /*
    * we have an array,
