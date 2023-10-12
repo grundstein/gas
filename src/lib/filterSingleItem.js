@@ -1,7 +1,7 @@
 import { is, lib } from '@grundstein/commons'
 
 export const filterSingleItem = (searchParams, item) => {
-  const [key, params, options] = searchParams
+  let [key, params, options] = searchParams
 
   /*
    * if there are no params, we do not filter at all.
