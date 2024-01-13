@@ -55,7 +55,7 @@ export const handler =
         return
       }
 
-      const versionKeys = Object.keys(api)
+      const versionKeys = Object.keys(api[hostname])
 
       if (!versionKeys.includes(requestVersion)) {
         const response = {
@@ -71,7 +71,7 @@ export const handler =
         return
       }
 
-      const version = api[requestVersion]
+      const version = api[hostname][requestVersion]
       const fullPath = `/${fn.join('/')}`
       const lambda = version[fullPath]
       const { db, schema } = version

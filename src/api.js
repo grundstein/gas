@@ -26,52 +26,64 @@ export const initApi = async config => {
 
   const dirPromises = dirs.map(async apiDir => {
     const absDir = path.join(cwd, apiDir)
-    const version = path.basename(apiDir)
+    const host = path.basename(apiDir)
 
     const { dataFile } = config
 
-    api[version] = {}
+    api[host] = {}
 
-    try {
-      const getDataPath = path.join(cwd, apiDir, dataFile)
-      const hasGetDataFile = await fs.exists(getDataPath)
-      if (hasGetDataFile) {
-        const { getData } = await import(getDataPath)
-        const { db, schema } = await getData()
+    const versionDirs = await fs.getDirectories(absDir, { minDepth: 1, maxDepth: 1 })
+    console.log({ versionDirs })
 
-        api[version].db = db
+    const versionPromises = versionDirs.map(async dir => {
+      const version = path.basename(dir)
 
-        if (schema) {
-          createApiFromSchema({ api, version, db, schema })
+      api[host][version] = {}
+
+      try {
+        const getDataPath = path.join(dir, dataFile)
+        const hasGetDataFile = await fs.exists(getDataPath)
+        console.log({ getDataPath, hasGetDataFile })
+        if (hasGetDataFile) {
+          const { getData } = await import(getDataPath)
+          const { db, schema } = await getData()
+
+          api[host].db = db
+
+          if (schema) {
+            createApiFromSchema({ api, host, version, db, schema })
+          }
         }
+      } catch (e) {
+        console.log('error creating api from getData', e)
       }
-    } catch (e) {
-      console.log('error creating api from getData', e)
-    }
 
-    try {
-      const files = await fs.getFiles(absDir)
+      try {
+        const files = await fs.getFiles(absDir)
 
-      const lambdaPromises = files
-        .filter(file => !file.endsWith(dataFile))
-        .map(async file => {
-          // get absolute path for import
-          const absPath = path.isAbsolute(file) ? file : path.join(cwd, file)
+        const lambdaPromises = files
+          .filter(file => !file.endsWith(dataFile))
+          .map(async file => {
+            // get absolute path for import
+            const absPath = path.isAbsolute(file) ? file : path.join(cwd, file)
 
-          const { default: lambda } = await import(pathToFileURL(absPath))
+            const { default: lambda } = await import(pathToFileURL(absPath))
 
-          // remove the extension from the lambdapath
-          const ext = path.extname(file)
-          const [_, ...pathParts] = file.split(version)
-          const lambdaPath = pathParts.join('/').replace(ext, '')
+            // remove the extension from the lambdapath
+            const ext = path.extname(file)
+            const [_, ...pathParts] = file.split(version)
+            const lambdaPath = pathParts.join('/').replace(ext, '')
 
-          api[version][lambdaPath] = lambda
-        })
+            api[host][version][lambdaPath] = lambda
+          })
 
-      await Promise.all(lambdaPromises)
-    } catch (e) {
-      console.error('Error loading lambda files', e)
-    }
+        await Promise.all(lambdaPromises)
+      } catch (e) {
+        console.error('Error loading lambda files', e)
+      }
+    })
+
+    await Promise.all(versionPromises)
   })
 
   await Promise.all(dirPromises)
@@ -81,8 +93,8 @@ export const initApi = async config => {
   return api
 }
 
-const createApiFromSchema = ({ api, version, db, schema }) => {
-  api[version].schema = schema
+const createApiFromSchema = ({ api, version, host, db, schema }) => {
+  api[host][version].schema = schema
 
   const schemaEntries = Object.entries(schema)
 
@@ -103,7 +115,7 @@ const createApiFromSchema = ({ api, version, db, schema }) => {
       }
     })
 
-    api[version][`/${k}`] = ({ url }) => {
+    api[host][version][`/${k}`] = ({ url }) => {
       const filtered = query.filter(db[k], url, searchKeys)
 
       if (!filtered || !filtered.length) {
