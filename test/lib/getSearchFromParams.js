@@ -14,7 +14,7 @@ export default [
     fn: getSearchFromParams(new URL('https://localhost:2351/v1/?slug=testname').searchParams, [
       { key: 'slug', fuzzy: true },
     ]),
-    expect: is.deep.equal(['slug', ['testname'], { fuzzy: true }]),
+    expect: is.deep.equal([['slug', ['testname'], { fuzzy: true }]]),
     info: 'getSearchFromParams works for slug and fuzzy',
   },
 ]
