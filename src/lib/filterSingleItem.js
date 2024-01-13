@@ -31,14 +31,10 @@ export const filterSingleItem = (searchParams, item) => {
     return !hasMatch
   }
 
-  if (options?.boolean) {
-    if (params[0] === 'true') {
-      return val !== true
-    } else if (params[0] === 'false') {
-      return val !== false
-    } else {
-      return val
-    }
+  if (params[0] === 'true' || params[0] === true) {
+    return val !== true
+  } else if (params[0] === 'false' || params[0] === false) {
+    return val !== false
   }
 
   /*

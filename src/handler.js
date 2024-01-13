@@ -40,9 +40,7 @@ export const handler =
     if (api) {
       const [requestVersion, ...fn] = parsedUrl.pathname.split('/').filter(a => a)
 
-      const hostApi = api.hosts[hostname]
-
-      if (!hostApi || is.empty(hostApi)) {
+      if (!api || is.empty(api)) {
         const response = {
           head: {
             [HTTP2_HEADER_STATUS]: 404,
@@ -57,7 +55,7 @@ export const handler =
         return
       }
 
-      const versionKeys = Object.keys(hostApi)
+      const versionKeys = Object.keys(api)
 
       if (!versionKeys.includes(requestVersion)) {
         const response = {
@@ -73,7 +71,7 @@ export const handler =
         return
       }
 
-      const version = hostApi[requestVersion]
+      const version = api[requestVersion]
       const fullPath = `/${fn.join('/')}`
       const lambda = version[fullPath]
       const { db, schema } = version

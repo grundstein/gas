@@ -1,7 +1,7 @@
 import { is } from '@grundstein/commons'
 
-export const getSearchFromParams = (url, searchKeys) => {
-  if (!url) {
+export const getSearchFromParams = (searchParams, searchKeys) => {
+  if (!searchParams) {
     return []
   }
 
@@ -12,20 +12,26 @@ export const getSearchFromParams = (url, searchKeys) => {
     let options
 
     /*
-     * allow
+     * allow searchKeys to be objects,
+     * used for fuzzy, might be used for boolean or optional in the future.
      */
     if (is.objectNative(searchKey)) {
-      const { key: k, ...o } = searchKey
-      options = o
-      searchKey = k.toLowerCase()
+      const { key, ...opts } = searchKey
+      options = opts
+      searchKey = key.toLowerCase()
     }
 
-    const params = url.searchParams.getAll(searchKey)
+    const params = searchParams.getAll(searchKey)
 
     const filteredParams = params.filter(a => a).map(a => a.toLowerCase())
 
     if (filteredParams.length) {
-      search.push([searchKey, filteredParams, options])
+      const searchItem = [searchKey, filteredParams]
+      if (options) {
+        searchItem.push(options)
+      }
+
+      search.push(searchItem)
     }
   })
 

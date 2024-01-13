@@ -1,7 +1,7 @@
 export const getData = async () => {
   return {
     db: {
-      table: [
+      collection: [
         {
           slug: 'item1',
           name: 'item 1',
@@ -26,7 +26,7 @@ export const getData = async () => {
       ],
     },
     schema: {
-      table: {
+      collection: {
         slug: { type: 'slug' },
         name: { type: 'string', multiple: true },
         key1: { type: 'string' },
