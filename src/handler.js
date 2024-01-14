@@ -40,7 +40,7 @@ export const handler =
     if (api) {
       const [requestVersion, ...fn] = parsedUrl.pathname.split('/').filter(a => a)
 
-      if (!api || is.empty(api)) {
+      if (!api || is.empty(api) || !api.hasOwnProperty(hostname)) {
         const response = {
           head: {
             [HTTP2_HEADER_STATUS]: 404,
