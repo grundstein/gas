@@ -33,7 +33,6 @@ export const initApi = async config => {
     api[host] = {}
 
     const versionDirs = await fs.getDirectories(absDir, { minDepth: 1, maxDepth: 1 })
-    console.log({ versionDirs })
 
     const versionPromises = versionDirs.map(async dir => {
       const version = path.basename(dir)
@@ -43,7 +42,6 @@ export const initApi = async config => {
       try {
         const getDataPath = path.join(dir, dataFile)
         const hasGetDataFile = await fs.exists(getDataPath)
-        console.log({ getDataPath, hasGetDataFile })
         if (hasGetDataFile) {
           const { getData } = await import(getDataPath)
           const { db, schema } = await getData()
