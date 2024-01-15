@@ -120,7 +120,7 @@ export const handler =
       }
 
       /* actually execute the api function */
-      const result = await lambda({ api, db, schema, body, headers, stream, url: parsedUrl })
+      const result = await lambda({ api, db, schema, body, headers, stream, version: requestVersion, url: parsedUrl })
 
       const head = {
         ...defaultHead,

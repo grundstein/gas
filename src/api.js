@@ -46,7 +46,7 @@ export const initApi = async config => {
           const { getData } = await import(getDataPath)
           const { db, schema } = await getData()
 
-          api[host].db = db
+          api[host][version].db = db
 
           if (schema) {
             createApiFromSchema({ api, host, version, db, schema })
