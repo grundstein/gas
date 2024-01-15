@@ -127,6 +127,7 @@ export const handler =
         body,
         headers,
         stream,
+        hostname,
         version: requestVersion,
         url: parsedUrl,
       })
