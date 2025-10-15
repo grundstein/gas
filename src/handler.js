@@ -3,7 +3,7 @@ import { URL } from 'node:url'
 
 import { log, is, middleware, lib } from '@grundstein/commons'
 
-const { body: bodyMiddleware} = middleware
+const { body: bodyMiddleware } = middleware
 
 const {
   // HTTP2_HEADER_AUTHORITY,
