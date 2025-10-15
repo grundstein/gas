@@ -33,11 +33,11 @@
   },
   "dependencies": {
     "@grundstein/commons": "github:grundstein/commons#http2",
-    "@magic/fs": "0.0.30"
+    "@magic/fs": "0.0.33"
   },
   "devDependencies": {
-    "@magic/format": "0.0.59",
-    "@magic/test": "0.2.18"
+    "@magic/format": "0.0.68",
+    "@magic/test": "0.2.24"
   },
   "keywords": [
     "grundstein",
