@@ -6,6 +6,7 @@
   "license": "AGPL-3.0",
   "description": "NOT YET BENCHMARKED OR IN PRODUCTION! @grundstein/gas. serves apis for magic apps.",
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "type": "module",
   "engines": {
     "node": ">=14.14.0"
@@ -13,6 +14,8 @@
   "engineStrict": true,
   "scripts": {
     "start": "npm run dev",
+    "build": "tsc && npm run format",
+    "prepublishOnly": "npm test && npm run build",
     "test": "t",
     "format": "f -w",
     "dev": "./src/bin.js --dir api --cert-dir node_modules/@grundstein/commons/src/certificates"
@@ -22,7 +25,8 @@
     "gas": "src/bin.js"
   },
   "files": [
-    "src"
+    "src",
+    "types"
   ],
   "repository": {
     "type": "git",
