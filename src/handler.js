@@ -1,8 +1,9 @@
 import http2 from 'node:http2'
 import { URL } from 'node:url'
 
-import { log, is, lib } from '@grundstein/commons'
-import { body as bodyMiddleware } from '@grundstein/commons/middleware.js'
+import { log, is, middleware, lib } from '@grundstein/commons'
+
+const { body: bodyMiddleware} = middleware
 
 const {
   // HTTP2_HEADER_AUTHORITY,

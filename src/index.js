@@ -1,6 +1,6 @@
-import { log } from '@grundstein/commons'
+import { log, lib } from '@grundstein/commons'
 
-import { createServer } from '@grundstein/commons/lib.js'
+const { createServer } = lib
 
 import initApi from './api.js'
 import handler from './handler.js'
