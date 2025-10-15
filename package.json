@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@grundstein/commons": "github:grundstein/commons#http2",
-    "@magic/fs": "0.0.33"
+    "@magic/fs": "0.0.34"
   },
   "devDependencies": {
     "@magic/format": "0.0.68",
