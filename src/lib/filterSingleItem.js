@@ -1,7 +1,21 @@
 import { is, lib } from '@grundstein/commons'
 
+/**
+ * @typedef {Object} SearchOptions
+ * @property {boolean} [fuzzy] - Whether to perform fuzzy search
+ * @property {boolean} [boolean] - Whether this is a boolean field
+ */
+
+/**
+ * Filter a single item based on search parameters
+ * @param {[string, string[] | string, SearchOptions?]} searchParams - Tuple of [key, params, options]
+ * @param {Record<string, string | string[]>} item - Item to filter
+ * @returns {boolean} True if item should be filtered out, false if it should be kept
+ */
 export const filterSingleItem = (searchParams, item) => {
   let [key, params, options] = searchParams
+
+  const val = item[key]
 
   /*
    * if there are no params, we do not filter at all.
@@ -11,8 +25,6 @@ export const filterSingleItem = (searchParams, item) => {
   }
 
   params = lib.anyToLowerCase(params)
-
-  const val = lib.anyToLowerCase(item[key])
 
   /*
    * we have an array,
@@ -31,18 +43,20 @@ export const filterSingleItem = (searchParams, item) => {
     return !hasMatch
   }
 
-  if (params[0] === 'true' || params[0] === true) {
-    return val !== true
-  } else if (params[0] === 'false' || params[0] === false) {
-    return val !== false
+  if (params[0] === 'true') {
+    return `${val}` !== 'true'
+  } else if (params[0] === 'false') {
+    return `${val}` !== 'false'
   }
 
   /*
    * a fuzzy search does a substring compare
    */
   if (options?.fuzzy) {
-    const filteredParams = params.filter(param => val.includes(param))
-    return filteredParams.length <= 0
+    const filteredParams = is.string(params)
+      ? val.includes(params)
+      : params.some(param => val.includes(param))
+    return !filteredParams
   }
 
   /*

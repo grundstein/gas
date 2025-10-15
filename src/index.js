@@ -5,7 +5,12 @@ const { createServer } = lib
 import initApi from './api.js'
 import handler from './handler.js'
 
-export const run = async (config = {}) => {
+/**
+ * Run the API server
+ * @param {import('./api.js').Config} config - Server configuration
+ * @returns {Promise<void>}
+ */
+export const run = async config => {
   try {
     config.startTime = log.hrtime()
 
@@ -13,7 +18,8 @@ export const run = async (config = {}) => {
 
     await createServer(config, handler({ api, config }))
   } catch (e) {
-    log.error(e)
+    const err = /** @type {import('@magic/error').CustomError} */ (e)
+    log.error(err)
     process.exit(1)
   }
 }

@@ -70,4 +70,4 @@ gas --dir api --host api.grundstein.it --port 2323 --cert-dir node_modules/@grun
 
 const { args } = cli(opts)
 
-run(args)
+run(/** @type {import('./api.js').Config} */ (args))

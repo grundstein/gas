@@ -7,6 +7,79 @@ import { query } from './lib/index.js'
 
 const cwd = process.cwd()
 
+/**
+ * @typedef {Object} Config
+ * @property {string} [dir] - API directory path
+ * @property {string} dataFile - Name of the data file (e.g., 'getData.js')
+ * @property {ReturnType<typeof process.hrtime>} [startTime]
+ * @property {string} [corsOrigin]
+ * @property {string} [corsHeaders]
+ */
+
+/**
+ * @typedef {Object} SchemaFieldString
+ * @property {'string' | 'slug'} type - Field type
+ * @property {boolean} [multiple] - Whether field can have multiple values
+ */
+
+/**
+ * @typedef {Object} SchemaFieldArray
+ * @property {'array'} type - Field type
+ * @property {string} itemType - Type of items in array
+ */
+
+/**
+ * @typedef {Object} SchemaFieldBoolean
+ * @property {'boolean'} type - Field type
+ */
+
+/**
+ * @typedef {SchemaFieldString | SchemaFieldArray | SchemaFieldBoolean} SchemaField
+ */
+
+/**
+ * @typedef {Record<string, SchemaField>} Schema
+ */
+
+/**
+ * @typedef {Object} GetDataResult
+ * @property {Record<string, any>} db - Database object
+ * @property {Schema} [schema] - Database schema
+ */
+
+/**
+ * @typedef {Object} ApiVersionBase
+ * @property {Record<string, any>} [db] - Database instance
+ * @property {Schema} [schema] - Database schema
+ */
+
+/**
+ * @typedef {ApiVersionBase & Record<string, Function>} ApiVersion
+ */
+
+/**
+ * @typedef {Record<string, Record<string, ApiVersion>>} Api
+ */
+
+/**
+ * @typedef {Object} LambdaContext
+ * @property {URL} url - Parsed URL object
+ * @property {string | Object} [body] - Request body
+ * @property {Object} [headers] - Request headers
+ */
+
+/**
+ * @typedef {Object} LambdaResponse
+ * @property {number} code - HTTP status code
+ * @property {string} body - Response body
+ * @property {boolean} [json] - Whether response is JSON
+ */
+
+/**
+ * Initialize API from directory structure
+ * @param {Config} config - Configuration object
+ * @returns {Promise<Api>}
+ */
 export const initApi = async config => {
   const { dir } = config
 
@@ -17,6 +90,7 @@ export const initApi = async config => {
 
   const startTime = log.hrtime()
 
+  /** @type {Api} */
   let api = {}
 
   log.info(`@grundstein/gas: serving api from ${dir}`)
@@ -43,6 +117,7 @@ export const initApi = async config => {
         const getDataPath = path.join(dir, dataFile)
         const hasGetDataFile = await fs.exists(getDataPath)
         if (hasGetDataFile) {
+          /** @type {{ getData: () => Promise<GetDataResult> }} */
           const { getData } = await import(getDataPath)
           const { db, schema } = await getData()
 
@@ -65,7 +140,8 @@ export const initApi = async config => {
             // get absolute path for import
             const absPath = path.isAbsolute(file) ? file : path.join(cwd, file)
 
-            const { default: lambda } = await import(pathToFileURL(absPath))
+            /** @type {{ default: (context: LambdaContext) => Promise<LambdaResponse> | LambdaResponse }} */
+            const { default: lambda } = await import(pathToFileURL(absPath).pathname)
 
             // remove the extension from the lambdapath
             const ext = path.extname(file)
@@ -91,12 +167,31 @@ export const initApi = async config => {
   return api
 }
 
+/**
+ * @typedef {Object} CreateApiFromSchemaParams
+ * @property {Api} api - API object to modify
+ * @property {string} version - API version
+ * @property {string} host - Hostname
+ * @property {Record<string, any>} db - Database object
+ * @property {Schema} schema - Database schema
+ */
+
+/**
+ * @typedef {string | { key: string, fuzzy?: boolean, boolean?: boolean }} SearchKey
+ */
+
+/**
+ * Create API endpoints from schema
+ * @param {CreateApiFromSchemaParams} params
+ * @returns {void}
+ */
 const createApiFromSchema = ({ api, version, host, db, schema }) => {
   api[host][version].schema = schema
 
   const schemaEntries = Object.entries(schema)
 
   schemaEntries.forEach(([k, v]) => {
+    /** @type {SearchKey[]} */
     const searchKeys = []
     const valueEntries = Object.entries(v)
     valueEntries.forEach(([kk, vv]) => {
@@ -113,6 +208,10 @@ const createApiFromSchema = ({ api, version, host, db, schema }) => {
       }
     })
 
+    /**
+     * @param {LambdaContext} context - Lambda context
+     * @returns {LambdaResponse}
+     */
     api[host][version][`/${k}`] = ({ url }) => {
       const filtered = query.filter(db[k], url, searchKeys)
 

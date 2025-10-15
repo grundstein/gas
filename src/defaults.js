@@ -1,8 +1,6 @@
-import path from 'node:path'
-
 import { constants } from '@grundstein/commons'
 
-const { HTTP2_HEADER_ORIGIN, HTTP2_HEADER_CONTENT_TYPE, HTTP2_HEADER_ACCEPT } = constants
+const { HTTP2_HEADER_AUTHORITY, HTTP2_HEADER_CONTENT_TYPE, HTTP2_HEADER_ACCEPT } = constants
 
 export const defaults = {
   dir: '/var/www/api',
@@ -10,5 +8,5 @@ export const defaults = {
   port: 2351,
   certDir: '/home/grundstein/certs',
   corsOrigin: '*',
-  corsHeaders: `${HTTP2_HEADER_ORIGIN}, x-requested-with, ${HTTP2_HEADER_CONTENT_TYPE}, ${HTTP2_HEADER_ACCEPT}`,
+  corsHeaders: `${HTTP2_HEADER_AUTHORITY}, x-requested-with, ${HTTP2_HEADER_CONTENT_TYPE}, ${HTTP2_HEADER_ACCEPT}`,
 }
