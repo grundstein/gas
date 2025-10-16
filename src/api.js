@@ -96,7 +96,7 @@ export const initApi = async config => {
   log.info(`@grundstein/gas: serving api from ${dir}`)
 
   // const files = await fs.getFiles(dir)
-  const dirs = await fs.getDirectories(dir, { minDepth: 1, maxDepth: 1 })
+  const dirs = await fs.getDirectories(dir, { maxDepth: 1, noRoot: true })
 
   const dirPromises = dirs.map(async apiDir => {
     const absDir = path.join(cwd, apiDir)
