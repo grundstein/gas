@@ -1,5 +1,3 @@
-import URL from 'url'
-
 import { log, is } from '@grundstein/commons'
 import { enhanceRequest, getHostname, respond } from '@grundstein/commons/lib.mjs'
 import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
@@ -11,11 +9,10 @@ export const handler = (api, config) => async (req, res) => {
 
   const startTime = log.hrtime()
 
-  const parsedUrl = new URL(req.url)
   const hostname = getHostname(req)
 
   if (api) {
-    const [requestVersion, fn] = parsedUrl.pathname.split('/').filter(a => a)
+    const [requestVersion, fn] = req.url.split('/').filter(a => a)
 
     const hostApi = api[hostname]
 
