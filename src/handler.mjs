@@ -11,7 +11,7 @@ export const handler = (api, config) => async (req, res) => {
 
   const startTime = log.hrtime()
 
-  const parsedUrl = URL.parse(req.url)
+  const parsedUrl = new URL(req.url)
   const hostname = getHostname(req)
 
   if (api) {
