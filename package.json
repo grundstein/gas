@@ -42,7 +42,7 @@
   "devDependencies": {
     "@magic/format": "0.0.68",
     "@magic/test": "0.2.24",
-    "@types/node": "24.8.0",
+    "@types/node": "24.9.1",
     "typescript": "5.9.3"
   },
   "keywords": [
