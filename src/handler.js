@@ -7,6 +7,53 @@ import {
   body as bodyMiddleware,
 } from '@grundstein/commons'
 
+import httpConstants from '@magic/http1-constants'
+
+/**
+ * @typedef {import('http').IncomingMessage} IncomingMessage
+ * @typedef {import('http').ServerResponse} ServerResponse
+ */
+
+/**
+ * @typedef {import('http').IncomingMessage & {
+ *   url: string;
+ *   method: string;
+ *   headers: Record<string, string | string[] | undefined>;
+ *   body?: any;
+ * }} Request
+ */
+
+/**
+ * @typedef {import('http').ServerResponse & {
+ *   json?: (body: any) => void;
+ * }} Response
+ */
+
+/**
+ * @typedef {{
+ *   [hostname: string]: {
+ *     [version: string]: {
+ *       [path: string]: (req: IncomingMessage, res: ServerResponse) => Promise<any> | any
+ *     }
+ *   }
+ * }} Api
+ */
+
+/**
+ * @typedef {{
+ *   corsOrigin?: string | string[];
+ *   corsHeaders?: string;
+ *   startTime: [number, number]
+ * }} Config
+ */
+
+/**
+ * Creates an HTTP handler that dispatches API requests based on hostname and version.
+ *
+ * @param {Api} api - An object containing APIs organized by hostname and version.
+ * @param {Config} config - Configuration for CORS and headers.
+ * @returns {(req: IncomingMessage & { body?: string | Object}, res: ServerResponse) => Promise<void>}
+ */
 export const handler = (api, config) => async (req, res) => {
   const { corsOrigin, corsHeaders } = config
 
@@ -16,7 +63,7 @@ export const handler = (api, config) => async (req, res) => {
 
   const hostname = getHostname(req)
 
-  if (api) {
+  if (api && req.url) {
     const [requestVersion, fn] = req.url.split('/').filter(a => a)
 
     const hostApi = api[hostname]
@@ -61,19 +108,24 @@ export const handler = (api, config) => async (req, res) => {
       }
     }
 
+    /** @type {Record<string, string>} */
     const headers = {}
 
     if (corsOrigin) {
       let val = '*'
       if (corsOrigin !== '*') {
-        const forwardedFor = req.headers['x-forwarded-for']
+        const forwardedHeader = req.headers[httpConstants.headers.X_FORWARDED_FOR]
+        const forwardedFor = is.array(forwardedHeader) ? forwardedHeader[0] : forwardedHeader
+
         if (forwardedFor && corsOrigin.includes(forwardedFor)) {
           val = forwardedFor
         }
       }
 
-      headers['Access-Control-Allow-Origin'] = val
-      headers['Access-Control-Allow-Headers'] = corsHeaders
+      headers[httpConstants.headers.ACCESS_CONTROL_ALLOW_ORIGIN] = val
+      if (corsHeaders) {
+        headers[httpConstants.headers.ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
+      }
     }
 
     const body = await lambda(req, res)
@@ -81,7 +133,7 @@ export const handler = (api, config) => async (req, res) => {
     return
   }
 
-  respond(res, { body: '404 - not found.', code: 404, type: 'api' })
+  respond(req, res, { body: '404 - not found.', code: 404, type: 'api' })
 }
 
 export default handler
