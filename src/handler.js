@@ -1,6 +1,4 @@
-import { log, is } from '@grundstein/commons'
-import { enhanceRequest, getHostname, respond } from '@grundstein/commons/lib.mjs'
-import { body as bodyMiddleware } from '@grundstein/commons/middleware.mjs'
+import { log, is, enhanceRequest, getHostname, respond, body as bodyMiddleware } from '@grundstein/commons'
 
 export const handler = (api, config) => async (req, res) => {
   const { corsOrigin, corsHeaders } = config
