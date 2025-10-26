@@ -21,10 +21,12 @@ const apiHelloFilePath = path.join(testApiDir, 'hello.js')
 
 // Mock API structure for testing
 const mockApi = {
-  'localhost': {
-    'v1': {
+  localhost: {
+    v1: {
       '/test': async (_req, _res) => ({ body: 'test response', code: 200 }),
-      '/error': async (_req, _res) => { throw new Error('test error') },
+      '/error': async (_req, _res) => {
+        throw new Error('test error')
+      },
     },
   },
 }
@@ -56,19 +58,19 @@ const createMockResponse = () => {
     statusCode: 200,
     headers: {},
     body: '',
-    setHeader: function(key, value) {
+    setHeader: function (key, value) {
       this.headers[key] = value
     },
-    writeHead: function(code, headers) {
+    writeHead: function (code, headers) {
       this.statusCode = code
       if (headers) {
         Object.assign(this.headers, headers)
       }
     },
-    write: function(data) {
+    write: function (data) {
       this.body += data
     },
-    end: function(data) {
+    end: function (data) {
       if (data) this.body += data
     },
   }
@@ -87,7 +89,7 @@ const before = () => {
     warn: () => {},
     error: () => {},
   }
-  
+
   log.error = () => {}
   log.info = () => {}
   log.timeTaken = () => {}
@@ -174,11 +176,11 @@ export default [
       const req = createMockRequest('/v1/test', 'POST')
       req.headers['content-type'] = 'application/json'
       const res = createMockResponse()
-      
+
       // Add body data to the stream
       req.push(JSON.stringify({ test: 'data' }))
       req.push(null)
-      
+
       await h(req, res)
       return req.method
     },
@@ -192,11 +194,11 @@ export default [
       const req = createMockRequest('/v1/test', 'POST')
       req.headers['content-type'] = 'application/json'
       const res = createMockResponse()
-      
+
       // Simulate body parsing error by not making it a proper stream
       const badReq = { ...req }
       delete badReq.on
-      
+
       await h(badReq, res)
       return badReq.body
     },
@@ -287,12 +289,12 @@ export default [
       // Check if any host was loaded
       const hosts = Object.keys(result)
       if (hosts.length === 0) return false
-      
+
       // Check if the first host has a version
       const firstHost = result[hosts[0]]
       const versions = Object.keys(firstHost)
       if (versions.length === 0) return false
-      
+
       // Check if the first version has any functions
       const firstVersion = firstHost[versions[0]]
       const funcs = Object.keys(firstVersion)
@@ -305,22 +307,22 @@ export default [
   {
     fn: async () => {
       const result = await initApi({ dir: testApiDir })
-      
+
       // Get first available function
       const hosts = Object.keys(result)
       if (hosts.length === 0) return false
-      
+
       const firstHost = result[hosts[0]]
       const versions = Object.keys(firstHost)
       if (versions.length === 0) return false
-      
+
       const firstVersion = firstHost[versions[0]]
       const funcs = Object.keys(firstVersion)
       if (funcs.length === 0) return false
-      
+
       const lambda = firstVersion[funcs[0]]
       if (!is.fn(lambda)) return false
-      
+
       const mockReq = {}
       const mockRes = {}
       const response = await lambda(mockReq, mockRes)
