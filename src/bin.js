@@ -2,7 +2,7 @@
 
 import { cli } from '@grundstein/commons'
 
-import run from './index.mjs'
+import run from './index.js'
 
 const opts = {
   options: [

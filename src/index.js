@@ -1,9 +1,9 @@
-import { log } from '@grundstein/commons'
+import { log, lib } from '@grundstein/commons'
 
-import { createServer } from '@grundstein/commons/lib.mjs'
+import initApi from './api.js'
+import handler from './handler.js'
 
-import initApi from './api.mjs'
-import handler from './handler.mjs'
+const { createServer } = lib
 
 export const run = async (config = {}) => {
   try {

@@ -5,7 +5,8 @@
   "homepage": "https://grundstein.github.io/gas",
   "license": "AGPL-3.0",
   "description": "NOT YET BENCHMARKED OR IN PRODUCTION! @grundstein/gas. serves apis for magic apps.",
-  "main": "src/index.mjs",
+  "main": "src/index.js",
+  "type": "module",
   "engines": {
     "node": ">=14.14.0"
   },
@@ -14,11 +15,11 @@
     "start": "npm run dev",
     "test": "t",
     "format": "f -w",
-    "dev": "src/bin.mjs --dir api"
+    "dev": "src/bin.js --dir api"
   },
   "bin": {
-    "grundstein-api-server": "src/bin.mjs",
-    "gas": "src/bin.mjs"
+    "grundstein-api-server": "src/bin.js",
+    "gas": "src/bin.js"
   },
   "files": [
     "src"

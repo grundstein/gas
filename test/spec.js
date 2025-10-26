@@ -1,6 +1,6 @@
 import { is } from '@magic/test'
 
-import defaultRunCluster, { run } from '../src/index.mjs'
+import defaultRunCluster, { run } from '../src/index.js'
 
 export default [
   { fn: () => run, expect: is.fn, info: 'runCluster is a function' },
