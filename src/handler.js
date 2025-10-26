@@ -1,4 +1,11 @@
-import { log, is, enhanceRequest, getHostname, respond, body as bodyMiddleware } from '@grundstein/commons'
+import {
+  log,
+  is,
+  enhanceRequest,
+  getHostname,
+  respond,
+  body as bodyMiddleware,
+} from '@grundstein/commons'
 
 export const handler = (api, config) => async (req, res) => {
   const { corsOrigin, corsHeaders } = config
