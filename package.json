@@ -6,6 +6,7 @@
   "license": "AGPL-3.0",
   "description": "NOT YET BENCHMARKED OR IN PRODUCTION! @grundstein/gas. serves apis for magic apps.",
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "type": "module",
   "engines": {
     "node": ">=14.14.0"
@@ -15,14 +16,17 @@
     "start": "npm run dev",
     "test": "t",
     "format": "f -w",
-    "dev": "src/bin.js --dir api"
+    "dev": "src/bin.js --dir api",
+    "build": "tsc && npm run format",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "bin": {
     "grundstein-api-server": "src/bin.js",
     "gas": "src/bin.js"
   },
   "files": [
-    "src"
+    "src",
+    "types"
   ],
   "repository": {
     "type": "git",
@@ -37,7 +41,9 @@
   },
   "devDependencies": {
     "@magic/format": "0.0.68",
-    "@magic/test": "0.2.24"
+    "@magic/test": "0.2.24",
+    "@types/node": "24.9.1",
+    "typescript": "5.9.3"
   },
   "keywords": [
     "grundstein",
