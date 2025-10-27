@@ -9,6 +9,9 @@ import {
 
 import httpConstants from '@magic/http1-constants'
 
+const { ACCESS_CONTROL_ALLOW_ORIGIN, ACCESS_CONTROL_ALLOW_HEADERS, X_FORWARDED_FOR } =
+  httpConstants.headers
+
 /**
  * @typedef {import('http').IncomingMessage} IncomingMessage
  * @typedef {import('http').ServerResponse} ServerResponse
@@ -68,7 +71,7 @@ export const handler = (api, config) => async (req, res) => {
   if (corsOrigin) {
     let val = '*'
     if (corsOrigin !== '*') {
-      const forwardedHeader = req.headers[httpConstants.headers.X_FORWARDED_FOR]
+      const forwardedHeader = req.headers[X_FORWARDED_FOR]
       const forwardedFor = is.array(forwardedHeader) ? forwardedHeader[0] : forwardedHeader
 
       if (forwardedFor && corsOrigin.includes(forwardedFor)) {
@@ -76,9 +79,9 @@ export const handler = (api, config) => async (req, res) => {
       }
     }
 
-    headers[httpConstants.headers.ACCESS_CONTROL_ALLOW_ORIGIN] = val
+    headers[ACCESS_CONTROL_ALLOW_ORIGIN] = val
     if (corsHeaders) {
-      headers[httpConstants.headers.ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
+      headers[ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
     }
   }
 
