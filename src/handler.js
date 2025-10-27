@@ -109,7 +109,7 @@ export const handler = (api, config) => async (req, res) => {
     }
 
     /** @type {Record<string, string>} */
-    const headers = {}
+    const rawHeaders = {}
 
     if (corsOrigin) {
       let val = '*'
@@ -122,14 +122,20 @@ export const handler = (api, config) => async (req, res) => {
         }
       }
 
-      headers[httpConstants.headers.ACCESS_CONTROL_ALLOW_ORIGIN] = val
+      rawHeaders[httpConstants.headers.ACCESS_CONTROL_ALLOW_ORIGIN] = val
       if (corsHeaders) {
-        headers[httpConstants.headers.ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
+        rawHeaders[httpConstants.headers.ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
       }
     }
 
-    const body = await lambda(req, res)
-    respond(req, res, { ...body, time: startTime, headers, type: 'api' })
+    const response = await lambda(req, res)
+
+    const headers = {
+      ...rawHeaders,
+      ...response.headers,
+    }
+
+    respond(req, res, { ...response, time: startTime, headers, type: 'api' })
     return
   }
 
