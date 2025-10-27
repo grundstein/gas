@@ -58,10 +58,29 @@ export const handler = (api, config) => async (req, res) => {
   const { corsOrigin, corsHeaders } = config
 
   req = enhanceRequest(req)
-
   const startTime = log.hrtime()
 
   const hostname = getHostname(req)
+
+  /** @type {Record<string, string>} */
+  const headers = {}
+
+  if (corsOrigin) {
+    let val = '*'
+    if (corsOrigin !== '*') {
+      const forwardedHeader = req.headers[httpConstants.headers.X_FORWARDED_FOR]
+      const forwardedFor = is.array(forwardedHeader) ? forwardedHeader[0] : forwardedHeader
+
+      if (forwardedFor && corsOrigin.includes(forwardedFor)) {
+        val = forwardedFor
+      }
+    }
+
+    headers[httpConstants.headers.ACCESS_CONTROL_ALLOW_ORIGIN] = val
+    if (corsHeaders) {
+      headers[httpConstants.headers.ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
+    }
+  }
 
   if (api && req.url) {
     const [requestVersion, fn] = req.url.split('/').filter(a => a)
@@ -72,7 +91,7 @@ export const handler = (api, config) => async (req, res) => {
       const code = 404
       const body = `No api for this host available.`
 
-      respond(req, res, { body, code, type: 'api' })
+      respond(req, res, { body, code, headers, type: 'api' })
       return
     }
 
@@ -82,7 +101,7 @@ export const handler = (api, config) => async (req, res) => {
       const code = 404
       const body = `Api request urls must start with a version. supported: ${versionKeys.join(' ')}`
 
-      respond(req, res, { body, code, type: 'api' })
+      respond(req, res, { body, code, headers, type: 'api' })
       return
     }
 
@@ -95,7 +114,7 @@ export const handler = (api, config) => async (req, res) => {
       const code = 404
       const body = `Function not found. Got: ${fn}. Supported: ${apiKeys.join(' ')}`
 
-      respond(req, res, { body, code, time: startTime, type: 'api' })
+      respond(req, res, { body, code, headers, time: startTime, type: 'api' })
       return
     }
 
@@ -108,38 +127,15 @@ export const handler = (api, config) => async (req, res) => {
       }
     }
 
-    /** @type {Record<string, string>} */
-    const rawHeaders = {}
-
-    if (corsOrigin) {
-      let val = '*'
-      if (corsOrigin !== '*') {
-        const forwardedHeader = req.headers[httpConstants.headers.X_FORWARDED_FOR]
-        const forwardedFor = is.array(forwardedHeader) ? forwardedHeader[0] : forwardedHeader
-
-        if (forwardedFor && corsOrigin.includes(forwardedFor)) {
-          val = forwardedFor
-        }
-      }
-
-      rawHeaders[httpConstants.headers.ACCESS_CONTROL_ALLOW_ORIGIN] = val
-      if (corsHeaders) {
-        rawHeaders[httpConstants.headers.ACCESS_CONTROL_ALLOW_HEADERS] = corsHeaders
-      }
-    }
-
     const response = await lambda(req, res)
 
-    const headers = {
-      ...rawHeaders,
-      ...response.headers,
-    }
+    Object.assign(headers, response.headers)
 
     respond(req, res, { ...response, time: startTime, headers, type: 'api' })
     return
   }
 
-  respond(req, res, { body: '404 - not found.', code: 404, type: 'api' })
+  respond(req, res, { body: '404 - not found.', code: 404, headers, type: 'api' })
 }
 
 export default handler
