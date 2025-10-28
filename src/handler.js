@@ -86,7 +86,8 @@ export const handler = (api, config) => async (req, res) => {
   }
 
   if (api && req.url) {
-    const [requestVersion, fn] = req.url.split('/').filter(a => a)
+    const [pathname] = req.url.split('?')
+    const [requestVersion, fn] = pathname.split('/').filter(a => a)
 
     const hostApi = api[hostname]
 
