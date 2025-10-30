@@ -18,7 +18,8 @@
     "format": "f -w",
     "dev": "src/bin.js --dir api",
     "build": "tsc && npm run format",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run test && npm run build",
+    "lint": "tsc --noEmit"
   },
   "bin": {
     "grundstein-api-server": "src/bin.js",
