@@ -1,9 +1,7 @@
-import { log, lib } from '@grundstein/commons'
+import { log, createServer } from '@grundstein/commons'
 
 import initApi from './api.js'
 import handler from './handler.js'
-
-const { createServer } = lib
 
 /**
  * @typedef {object} Config
