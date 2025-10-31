@@ -8,7 +8,7 @@
 
 #### api
 
-serves a magic api from a pregenerated magic api bundle.
+serves a magic api from a magic api dir.
 
 #### installation
 
@@ -22,7 +22,7 @@ npm i @grundstein/gas
 // show full help
 gas --help
 
-// serve the ./public directory
+// serve the ./docs directory as api
 gas
 
 // serve specific directory
@@ -32,10 +32,19 @@ gas --dir local/directory/path
 gas --host grundstein.it --port 2323
 ```
 
-#### v0.0.1
+#### changelog
 
-first release
+##### v0.0.4 - unreleased
 
-#### v0.0.2
+##### v0.0.3
+
+- big refactor. add types, add tests.
+- update dependencies
+
+##### v0.0.2
 
 use url.pathToFileURL to make windows await import api files correctly
+
+##### v0.0.1
+
+first release
