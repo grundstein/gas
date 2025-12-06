@@ -41,9 +41,9 @@
     "@grundstein/file-store": "0.0.1"
   },
   "devDependencies": {
-    "@magic/format": "0.0.68",
-    "@magic/test": "0.2.26",
-    "@types/node": "24.9.2",
+    "@magic/format": "0.0.69",
+    "@magic/test": "0.2.28",
+    "@types/node": "24.10.1",
     "typescript": "5.9.3"
   },
   "keywords": [
