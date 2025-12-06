@@ -2,6 +2,9 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 import { fs, log } from '@grundstein/commons'
+import { exec } from '@magic/cli'
+import constants from '@magic/http1-constants'
+const { CONTENT_TYPE, ACCESS_CONTROL_ALLOW_ORIGIN } = constants.headers
 
 /**
  * @typedef {import('http').IncomingMessage} Request
@@ -85,6 +88,35 @@ export const initApi = async config => {
       api[host][version][`/${lambdaPath}`] = lambda
     }),
   )
+
+  try {
+    const lastGitUpdate = await exec('git show -s --format=%ci')
+
+    if (lastGitUpdate) {
+      const timestamp = new Date(lastGitUpdate).getTime() / 1000
+
+      if (timestamp && timestamp > 0) {
+        Object.values(api).forEach(host => {
+          Object.values(host).forEach(version => {
+            if ('/timestamp' in version) {
+              return
+            }
+
+            version['/timestamp'] = () => ({
+              code: 200,
+              headers: {
+                [CONTENT_TYPE]: 'text/json; charset=utf-8',
+                [ACCESS_CONTROL_ALLOW_ORIGIN]: '*',
+              },
+              body: `${timestamp}`,
+            })
+          })
+        })
+      }
+    }
+  } catch (e) {
+    console.error('Error getting last git update.', e)
+  }
 
   log.timeTaken(startTime, '@grundstein/gas init took')
 
