@@ -34,7 +34,12 @@ gas --host grundstein.it --port 2323
 
 #### changelog
 
-##### v0.0.4 - unreleased
+##### v0.0.5 - unreleased
+
+##### v0.0.4
+
+- add /timestamp endpoint to all apis, if it does not exist.
+  for now, /timestamp depends on last git commit.
 
 ##### v0.0.3
 
